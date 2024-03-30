@@ -21,28 +21,57 @@ class InvoicePage extends StatelessWidget {
             ),
           ];
         },
-        body: ListView.builder(
-          itemBuilder: (context, index) {
-            return ListTile(
-              onTap: () {
-                invoiceCubit.invoice = invoices[index];
-                Navigator.of(context).pushNamed('/detailInvoice');
-              },
-              subtitle: Text(
-                DateFormat('d-M-y H:m').format(invoices[index].date),
-              ), // Isi nanti dengan tanggal transaksi
-              title: Text(invoices[index].nama),
-              trailing: Text(
-                'Rp. ${invoices[index].getTotalHarga()}',
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
+        body: BlocBuilder<InvoiceCubit, InvoiceState>(
+          bloc: invoiceCubit..getInvoices(),
+          buildWhen: (previous, current) => current is ReadInvoice,
+          builder: (context, state) {
+            // Loading
+            if (state is ReadInvoiceLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            // Loaded
+            if (state is ReadInvoiceLoaded) {
+              return RefreshIndicator(
+                displacement: 10,
+                onRefresh: () async => invoiceCubit.getInvoices(),
+                child: ListView.builder(
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      onTap: () {
+                        invoiceCubit.invoice = state.data[index];
+                        Navigator.of(context).pushNamed(detailInvoicePage);
+                      },
+                      subtitle: Text(
+                        DateFormat('d-M-y H:m')
+                            .format(state.data[index].boughtAt),
+                      ),
+                      title: Text(state.data[index].namaPelanggan),
+                      trailing: Text(
+                        'Rp. ${state.data[index].getTotalHarga}',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    );
+                  },
+                  itemCount: state.data.length,
                 ),
+              );
+            }
+            return Center(
+              child: ElevatedButton(
+                onPressed: () => invoiceCubit.getInvoices(),
+                child: const Text('Ulangi'),
               ),
             );
           },
-          itemCount: invoices.length,
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.of(context).pushNamed(makeInvoicePage),
+        child: const Icon(Icons.add),
       ),
     );
   }

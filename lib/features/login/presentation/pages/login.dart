@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../core/constants_finals.dart';
+import '../../../../core/constants_finals.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -56,9 +56,7 @@ class _LoginPageState extends State<LoginPage> {
             const Gap(20),
             Text(
               'Bengkel Pak Bowo',
-              style: GoogleFonts.roboto(
-                fontSize: 16,
-              ),
+              style: GoogleFonts.roboto(fontSize: 16),
             ),
             const Gap(35),
             SizedBox(

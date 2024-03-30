@@ -4,7 +4,7 @@ import 'package:bengkel_pak_bowo/features/admin/invoice/data/models/invoice.dart
 import 'package:intl/intl.dart';
 import 'package:pdf/widgets.dart';
 
-Future<Uint8List> makePDF(Invoice invoice) async {
+Future<Uint8List> makePDF(InvoiceModel invoice) async {
   final Document pdf = Document();
   pdf.addPage(
     Page(
@@ -24,7 +24,7 @@ Future<Uint8List> makePDF(Invoice invoice) async {
               style: const TextStyle(fontSize: 18),
             ),
             Text(
-              'Nomor Invoice - ${DateFormat('d/M/y').format(invoice.date)}',
+              'Nomor Invoice - ${DateFormat('d/M/y').format(invoice.boughtAt)}',
               style: const TextStyle(fontSize: 18),
             ),
             SizedBox(height: 20),
@@ -67,7 +67,7 @@ Future<Uint8List> makePDF(Invoice invoice) async {
                           style: const TextStyle(fontSize: 14),
                         ),
                         Text(
-                          'Rp. ${invoice.barangs[index].getSubTotal()}',
+                          'Rp. ${invoice.barangs[index].getSubTotal}',
                           style: const TextStyle(fontSize: 14),
                         ),
                       ],
@@ -90,7 +90,7 @@ Future<Uint8List> makePDF(Invoice invoice) async {
                   ),
                 ),
                 Text(
-                  'Rp. ${invoice.getTotalHarga()}',
+                  'Rp. ${invoice.getTotalHarga}',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

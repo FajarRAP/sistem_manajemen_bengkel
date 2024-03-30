@@ -1,3 +1,4 @@
+import 'package:bengkel_pak_bowo/core/constants_finals.dart';
 import 'package:bengkel_pak_bowo/features/admin/invoice/presentation/cubit/invoice_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -49,7 +50,7 @@ class DetailInvoicePage extends StatelessWidget {
                   ),
                   Expanded(
                     child: Text(
-                      invoiceCubit.getInvoice.nama,
+                      invoiceCubit.getInvoice.namaPelanggan,
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
@@ -104,7 +105,7 @@ class DetailInvoicePage extends StatelessWidget {
                   ),
                   const Divider(),
                   ListView.builder(
-                    padding: const EdgeInsets.all(0),
+                    padding: EdgeInsets.zero,
                     itemBuilder: (context, index) {
                       return ListTile(
                         title: Text(invoiceCubit.getBarangs[index].nama),
@@ -114,7 +115,7 @@ class DetailInvoicePage extends StatelessWidget {
                             Text(
                                 '${invoiceCubit.getBarangs[index].n} x ${invoiceCubit.getBarangs[index].harga}'),
                             Text(
-                                'Rp. ${invoiceCubit.getBarangs[index].getSubTotal()}'),
+                                'Rp. ${invoiceCubit.getBarangs[index].getSubTotal}'),
                           ],
                         ),
                       );
@@ -155,10 +156,8 @@ class DetailInvoicePage extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.of(context).pushNamed('/previewInvoice'),
-        child: const Icon(
-          Icons.picture_as_pdf,
-        ),
+        onPressed: () => Navigator.of(context).pushNamed(previewInvoicePage),
+        child: const Icon(Icons.picture_as_pdf),
       ),
     );
   }

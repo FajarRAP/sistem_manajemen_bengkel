@@ -1,33 +1,27 @@
+import 'dart:math';
+
 import 'package:bengkel_pak_bowo/features/admin/invoice/data/models/barang.dart';
-import 'package:bengkel_pak_bowo/features/admin/invoice/data/models/invoice.dart';
+
+// API
+const String url = 'http://10.0.2.2:3000/';
+final Map<String, String> endpoint = {
+  'invoice': 'invoice',
+};
+final Map<String, String> headers = {'Content-Type': 'application/json'};
 
 // route name
-const String loginPage = '/login';
-const String invoicePage = '/invoice';
-const String detailInvoicePage = '/detailInvoice';
-const String previewInvoicePage = '/previewInvoice';
+const String initialRoute = '/';
+const String loginPage = '${initialRoute}login/';
+const String invoicePage = '${initialRoute}invoice/';
+const String makeInvoicePage = '${invoicePage}make/';
+const String detailInvoicePage = '${invoicePage}detail/';
+const String previewInvoicePage = '${invoicePage}preview/';
 
-// barang
-final List<Invoice> invoices = [
-  Invoice(
-    nama: 'Fajar Riansyah Aryda Putra',
-    barangs: [
-      Barang(
-        nama: 'Gamepad Rexus Daxa Asteria AX1 Wireless Black',
-        harga: 379000,
-        n: 1,
-      ),
-      Barang(
-        nama: 'Digital Alliance Meca Air S Cerullean White',
-        harga: 339000,
-        n: 1,
-      ),
-      Barang(
-        nama: 'Coffee Milk Rum M',
-        harga: 19000,
-        n: 2,
-      ),
-    ],
-    date: DateTime.now(),
+final List<BarangModel> barangs = List.generate(
+  100,
+  (index) => BarangModel(
+    nama: 'Barang ke-$index',
+    harga: Random().nextInt(50000) % 1000 * 100,
+    n: 1,
   ),
-];
+);
