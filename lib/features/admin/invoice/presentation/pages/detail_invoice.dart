@@ -87,7 +87,7 @@ class DetailInvoicePage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Nama Barang',
+                          'Nama Jasa',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
@@ -110,7 +110,7 @@ class DetailInvoicePage extends StatelessWidget {
                       return ListTile(
                         title: Text(invoiceCubit.getBarangs[index].nama),
                         trailing: Text(
-                          'Rp. ${invoiceCubit.getBarangs[index].harga}',
+                          'Rp. ${invoiceCubit.getBarangs[index].formattedHarga}',
                           style: const TextStyle(
                             fontSize: 14,
                           ),
@@ -137,7 +137,7 @@ class DetailInvoicePage extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Rp. ${invoiceCubit.getTotalHarga}',
+                          'Rp. ${invoiceCubit.formattedTotalHarga}',
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,

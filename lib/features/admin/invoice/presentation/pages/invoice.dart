@@ -51,7 +51,7 @@ class InvoicePage extends StatelessWidget {
                       ),
                       title: Text(state.data[index].namaPelanggan),
                       trailing: Text(
-                        'Rp. ${state.data[index].getTotalHarga}',
+                        'Rp. ${state.data[index].formattedTotalHarga}',
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,

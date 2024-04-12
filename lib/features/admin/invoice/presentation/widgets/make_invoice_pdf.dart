@@ -33,7 +33,7 @@ Future<Uint8List> makePDF(final InvoiceModel invoice) async {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Nama Barang',
+                  'Nama Jasa',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -61,7 +61,7 @@ Future<Uint8List> makePDF(final InvoiceModel invoice) async {
                       ),
                     ),
                     Text(
-                      'Rp. ${invoice.barangs[index].harga}',
+                      'Rp. ${invoice.barangs[index].formattedHarga}',
                       style: const TextStyle(
                         fontSize: 14,
                       ),
@@ -84,7 +84,7 @@ Future<Uint8List> makePDF(final InvoiceModel invoice) async {
                   ),
                 ),
                 Text(
-                  'Rp. ${invoice.getTotalHarga}',
+                  'Rp. ${invoice.formattedTotalHarga}',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

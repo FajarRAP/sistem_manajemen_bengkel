@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:intl/intl.dart';
+
 BarangModel barangFromJson(String str) =>
     BarangModel.fromJson(json.decode(str));
 
@@ -11,6 +13,7 @@ class BarangModel {
 
   // Getter
   String get barangAsString => nama;
+  String get formattedHarga => NumberFormat('###,###').format(harga);
 
   BarangModel({
     required this.nama,

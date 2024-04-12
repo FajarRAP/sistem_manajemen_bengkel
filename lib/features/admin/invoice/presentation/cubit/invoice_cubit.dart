@@ -18,7 +18,7 @@ class InvoiceCubit extends Cubit<InvoiceState> {
   // Getter
   InvoiceModel get getInvoice => invoice!;
   List<BarangModel> get getBarangs => invoice!.barangs;
-  int get getTotalHarga => invoice!.getTotalHarga;
+  String get formattedTotalHarga => invoice!.formattedTotalHarga;
 
   Future<void> getInvoices() async {
     emit(ReadInvoiceLoading());

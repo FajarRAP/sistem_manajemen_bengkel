@@ -73,7 +73,7 @@ class _MakeInvoicePageState extends State<MakeInvoicePage> {
                     itemBuilder: (context, index) => ListTile(
                       title: Text(state.data[index].nama),
                       trailing: Text(
-                        'Rp. ${state.data[index].harga}',
+                        'Rp. ${state.data[index].formattedHarga}',
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,

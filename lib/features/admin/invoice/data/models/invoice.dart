@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bengkel_pak_bowo/features/admin/invoice/data/models/barang.dart';
+import 'package:intl/intl.dart';
 
 List<InvoiceModel> invoiceFromJson(String str) => List<InvoiceModel>.from(
     json.decode(str).map((x) => InvoiceModel.fromJson(x)));
@@ -15,6 +16,7 @@ class InvoiceModel {
   // Getter
   int get getTotalHarga => barangs.fold(
       0, (previousValue, element) => previousValue + element.harga);
+  String get formattedTotalHarga => NumberFormat('###,###').format(getTotalHarga);
 
   InvoiceModel({
     required this.namaPelanggan,
