@@ -4,6 +4,8 @@ import 'package:bengkel_pak_bowo/features/admin/invoice/data/models/barang.dart'
 const String url = 'https://bengkel-pak-bowo-services.vercel.app/';
 final Map<String, String> endpoint = {
   'invoice': 'invoice',
+  'login': 'login',
+  'register': 'register',
 };
 final Map<String, String> headers = {'Content-Type': 'application/json'};
 

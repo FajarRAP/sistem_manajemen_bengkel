@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:bengkel_pak_bowo/features/admin/invoice/data/data_sources/remote.dart';
 import 'package:bengkel_pak_bowo/features/admin/invoice/data/models/barang.dart';
 import 'package:bengkel_pak_bowo/features/admin/invoice/data/models/invoice.dart';
 import 'package:bengkel_pak_bowo/features/admin/invoice/data/repositories/invoice_repositories_impl.dart';
+import 'package:bengkel_pak_bowo/injection_container.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -23,8 +23,7 @@ class InvoiceCubit extends Cubit<InvoiceState> {
   Future<void> getInvoices() async {
     emit(ReadInvoiceLoading());
 
-    final results =
-        await InvoiceRepositoriesImpl(InvoiceServices()).getInvoices();
+    final results = await locator<InvoiceRepositoriesImpl>().getInvoices();
 
     results.fold(
       (failure) {
@@ -45,7 +44,7 @@ class InvoiceCubit extends Cubit<InvoiceState> {
   Future<void> createInvoices(final InvoiceModel invoice) async {
     emit(InvoiceCreating());
 
-    final results = await InvoiceRepositoriesImpl(InvoiceServices())
+    final results = await locator<InvoiceRepositoriesImpl>()
         .createInvoices(invoiceToJson(invoice));
 
     results.fold(
