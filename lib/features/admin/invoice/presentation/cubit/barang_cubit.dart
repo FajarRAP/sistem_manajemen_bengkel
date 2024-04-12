@@ -14,7 +14,6 @@ class BarangCubit extends Cubit<BarangState> {
 
   // Setter
   set addBarang(final BarangModel barang) => barangs.add(barang);
-  set setPcs(final String n) => barangs.last.setN = int.parse(n);
 
   void onCancelled() => barangs.removeLast();
 
@@ -23,6 +22,13 @@ class BarangCubit extends Cubit<BarangState> {
       emit(BarangEmpty());
     } else {
       emit(BarangLoaded(barangs));
+    }
+  }
+
+  void deleteAllItems() {
+    if (barangs.isNotEmpty) {
+      barangs.clear();
+      emit(BarangEmpty());
     }
   }
 }

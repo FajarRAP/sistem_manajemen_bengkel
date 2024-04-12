@@ -32,6 +32,7 @@ class InvoiceCubit extends Cubit<InvoiceState> {
       },
       (success) {
         invoices = success;
+        // success.clear();
         if (success.isEmpty) {
           emit(ReadInvoiceEmpty());
         } else {

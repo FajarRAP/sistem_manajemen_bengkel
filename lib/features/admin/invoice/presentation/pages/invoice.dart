@@ -25,9 +25,12 @@ class InvoicePage extends StatelessWidget {
           bloc: invoiceCubit..getInvoices(),
           buildWhen: (previous, current) => current is ReadInvoice,
           builder: (context, state) {
+            print(state);
             // Loading
             if (state is ReadInvoiceLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
             }
 
             // Loaded
@@ -43,7 +46,7 @@ class InvoicePage extends StatelessWidget {
                         Navigator.of(context).pushNamed(detailInvoicePage);
                       },
                       subtitle: Text(
-                        DateFormat('d-M-y H:m')
+                        DateFormat('d-M-y HH:mm')
                             .format(state.data[index].boughtAt),
                       ),
                       title: Text(state.data[index].namaPelanggan),
@@ -60,6 +63,28 @@ class InvoicePage extends StatelessWidget {
                 ),
               );
             }
+
+            // Empty
+            if (state is ReadInvoiceEmpty) {
+              return const Center(
+                child: Text(
+                  'Belum Ada Transaksi',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              );
+            }
+
+            // Error
+            // if (state is ReadInvoiceError) {
+            //   return TextButton(
+            //     onPressed: () {},
+            //     child: Text(state.message),
+            //   );
+            // }
+
             return Center(
               child: ElevatedButton(
                 onPressed: () => invoiceCubit.getInvoices(),

@@ -4,8 +4,9 @@ import 'package:bengkel_pak_bowo/features/admin/invoice/data/models/invoice.dart
 import 'package:intl/intl.dart';
 import 'package:pdf/widgets.dart';
 
-Future<Uint8List> makePDF(InvoiceModel invoice) async {
+Future<Uint8List> makePDF(final InvoiceModel invoice) async {
   final Document pdf = Document();
+
   pdf.addPage(
     Page(
       build: (context) {
@@ -50,8 +51,8 @@ Future<Uint8List> makePDF(InvoiceModel invoice) async {
             Divider(),
             ListView.separated(
               itemBuilder: (context, index) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       invoice.barangs[index].nama,
@@ -59,18 +60,11 @@ Future<Uint8List> makePDF(InvoiceModel invoice) async {
                         fontSize: 16,
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          '${invoice.barangs[index].n} x ${invoice.barangs[index].harga}',
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                        Text(
-                          'Rp. ${invoice.barangs[index].getSubTotal}',
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                      ],
+                    Text(
+                      'Rp. ${invoice.barangs[index].harga}',
+                      style: const TextStyle(
+                        fontSize: 14,
+                      ),
                     ),
                   ],
                 );
@@ -103,5 +97,6 @@ Future<Uint8List> makePDF(InvoiceModel invoice) async {
       },
     ),
   );
+  
   return pdf.save();
 }

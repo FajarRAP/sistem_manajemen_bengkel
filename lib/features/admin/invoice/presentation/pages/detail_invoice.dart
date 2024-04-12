@@ -109,14 +109,11 @@ class DetailInvoicePage extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return ListTile(
                         title: Text(invoiceCubit.getBarangs[index].nama),
-                        subtitle: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                                '${invoiceCubit.getBarangs[index].n} x ${invoiceCubit.getBarangs[index].harga}'),
-                            Text(
-                                'Rp. ${invoiceCubit.getBarangs[index].getSubTotal}'),
-                          ],
+                        trailing: Text(
+                          'Rp. ${invoiceCubit.getBarangs[index].harga}',
+                          style: const TextStyle(
+                            fontSize: 14,
+                          ),
                         ),
                       );
                     },

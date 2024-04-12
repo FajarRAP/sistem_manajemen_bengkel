@@ -1,9 +1,7 @@
-import 'dart:math';
-
 import 'package:bengkel_pak_bowo/features/admin/invoice/data/models/barang.dart';
 
 // API
-const String url = 'http://10.0.2.2:3000/';
+const String url = 'https://bengkel-pak-bowo-services.vercel.app/';
 final Map<String, String> endpoint = {
   'invoice': 'invoice',
 };
@@ -17,11 +15,12 @@ const String makeInvoicePage = '${invoicePage}make/';
 const String detailInvoicePage = '${invoicePage}detail/';
 const String previewInvoicePage = '${invoicePage}preview/';
 
-final List<BarangModel> barangs = List.generate(
-  100,
-  (index) => BarangModel(
-    nama: 'Barang ke-$index',
-    harga: Random().nextInt(50000) % 1000 * 100,
-    n: 1,
-  ),
-);
+final List<BarangModel> items = [
+  BarangModel(nama: 'Cat Full Body', harga: 12000000),
+  BarangModel(nama: 'Cat Per Panel', harga: 700000),
+  BarangModel(nama: 'Poles Cat Body', harga: 800000),
+  BarangModel(nama: 'Servis AC', harga: 1100000),
+  BarangModel(nama: 'Tune Up', harga: 600000),
+  BarangModel(nama: 'Modif Body Full Cat', harga: 15000000),
+  BarangModel(nama: 'Ganti Kapas Kopling', harga: 500000),
+];

@@ -6,7 +6,6 @@ import 'package:bengkel_pak_bowo/features/admin/invoice/presentation/cubit/invoi
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
@@ -64,21 +63,34 @@ class _MakeInvoicePageState extends State<MakeInvoicePage> {
         body: BlocBuilder<BarangCubit, BarangState>(
           bloc: barangCubit..getBarang(),
           builder: (context, state) {
+            // Barang Added
             if (state is BarangLoaded) {
-              return ListView.builder(
-                padding: EdgeInsets.zero,
-                itemBuilder: (context, index) => ListTile(
-                  title: Text(state.data[index].nama),
-                  subtitle: Text('${state.data[index].n} Buah'),
-                  trailing: Text(
-                    'Rp. ${state.data[index].getSubTotal}',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListView.builder(
+                    padding: EdgeInsets.zero,
+                    itemBuilder: (context, index) => ListTile(
+                      title: Text(state.data[index].nama),
+                      trailing: Text(
+                        'Rp. ${state.data[index].harga}',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    itemCount: state.data.length,
+                    shrinkWrap: true,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: ElevatedButton(
+                      onPressed: () => barangCubit.deleteAllItems(),
+                      child: const Text('Hapus Semua Barang'),
                     ),
                   ),
-                ),
-                itemCount: state.data.length,
+                ],
               );
             }
 
@@ -105,18 +117,18 @@ class _MakeInvoicePageState extends State<MakeInvoicePage> {
                     return Form(
                       key: formKey,
                       child: AlertDialog(
-                        title: const Text('Pilih Barang'),
+                        title: const Text('Pilih Jasa'),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             DropdownSearch<BarangModel>(
-                              itemAsString: (item) => item.barangAsString(),
-                              items: barangs,
+                              itemAsString: (item) => item.barangAsString,
+                              items: items,
                               dropdownDecoratorProps:
                                   const DropDownDecoratorProps(
                                 dropdownSearchDecoration: InputDecoration(
-                                  hintText: 'Barang',
+                                  hintText: 'Jasa',
                                 ),
                               ),
                               popupProps: PopupProps.menu(
@@ -135,40 +147,12 @@ class _MakeInvoicePageState extends State<MakeInvoicePage> {
                                 }
                               },
                             ),
-                            const SizedBox(height: 6),
-                            SizedBox(
-                              width: 80,
-                              child: TextFormField(
-                                controller: pcsController,
-                                decoration: const InputDecoration(
-                                  hintText: 'Pcs',
-                                  contentPadding: EdgeInsets.zero,
-                                ),
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                ],
-                                keyboardType: TextInputType.number,
-                                textAlign: TextAlign.center,
-                                validator: (value) {
-                                  if (value != null) {
-                                    if (value.isEmpty) {
-                                      return 'Harap Isi';
-                                    }
-                                    if (int.parse(value) <= 0) {
-                                      return 'Tidak Valid';
-                                    }
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
                           ],
                         ),
                         actions: [
                           ElevatedButton(
                             onPressed: () {
                               if (formKey.currentState!.validate()) {
-                                barangCubit.setPcs = pcsController.text;
                                 pcsController.text = '';
                                 barangCubit.getBarang();
                                 Navigator.of(context).pop('onElevatedButton');
