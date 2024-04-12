@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:intl/intl.dart';
 
-BarangModel barangFromJson(String str) =>
-    BarangModel.fromJson(json.decode(str));
+ServiceModel barangFromJson(String str) =>
+    ServiceModel.fromJson(json.decode(str));
 
-String barangToJson(BarangModel data) => json.encode(data.toJson());
+String barangToJson(ServiceModel data) => json.encode(data.toJson());
 
-class BarangModel {
+class ServiceModel {
   final String nama;
   final int harga;
 
@@ -15,12 +15,12 @@ class BarangModel {
   String get barangAsString => nama;
   String get formattedHarga => NumberFormat('###,###').format(harga);
 
-  BarangModel({
+  ServiceModel({
     required this.nama,
     required this.harga,
   });
 
-  factory BarangModel.fromJson(Map<String, dynamic> json) => BarangModel(
+  factory ServiceModel.fromJson(Map<String, dynamic> json) => ServiceModel(
         nama: json["nama"],
         harga: json["harga"],
       );

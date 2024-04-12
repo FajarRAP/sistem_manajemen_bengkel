@@ -17,7 +17,7 @@ class InvoiceCubit extends Cubit<InvoiceState> {
 
   // Getter
   InvoiceModel get getInvoice => invoice!;
-  List<BarangModel> get getBarangs => invoice!.barangs;
+  List<ServiceModel> get getServices => invoice!.services;
   String get formattedTotalHarga => invoice!.formattedTotalHarga;
 
   Future<void> getInvoices() async {
@@ -44,8 +44,10 @@ class InvoiceCubit extends Cubit<InvoiceState> {
 
   Future<void> createInvoices(final InvoiceModel invoice) async {
     emit(InvoiceCreating());
+
     final results = await InvoiceRepositoriesImpl(InvoiceServices())
         .createInvoices(invoiceToJson(invoice));
+
     results.fold(
       (failure) {
         emit(InvoiceErrorCreated(failure.message));

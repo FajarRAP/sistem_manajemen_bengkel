@@ -108,16 +108,16 @@ class DetailInvoicePage extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        title: Text(invoiceCubit.getBarangs[index].nama),
+                        title: Text(invoiceCubit.getServices[index].nama),
                         trailing: Text(
-                          'Rp. ${invoiceCubit.getBarangs[index].formattedHarga}',
+                          'Rp. ${invoiceCubit.getServices[index].formattedHarga}',
                           style: const TextStyle(
                             fontSize: 14,
                           ),
                         ),
                       );
                     },
-                    itemCount: invoiceCubit.getBarangs.length,
+                    itemCount: invoiceCubit.getServices.length,
                     shrinkWrap: true,
                   ),
                   const Divider(),

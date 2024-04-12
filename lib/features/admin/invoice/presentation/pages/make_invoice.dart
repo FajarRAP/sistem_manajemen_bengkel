@@ -63,6 +63,7 @@ class _MakeInvoicePageState extends State<MakeInvoicePage> {
         body: BlocBuilder<BarangCubit, BarangState>(
           bloc: barangCubit..getBarang(),
           builder: (context, state) {
+            
             // Barang Added
             if (state is BarangLoaded) {
               return Column(
@@ -96,7 +97,7 @@ class _MakeInvoicePageState extends State<MakeInvoicePage> {
 
             return const Center(
               child: Text(
-                'Silakan Tambah Barang',
+                'Silakan Tambah Jasa',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
@@ -109,7 +110,7 @@ class _MakeInvoicePageState extends State<MakeInvoicePage> {
           animatedIcon: AnimatedIcons.menu_close,
           children: [
             SpeedDialChild(
-              label: 'Tambah Item',
+              label: 'Tambah Jasa',
               onTap: () async {
                 final String? onCancelled = await showDialog(
                   context: context,
@@ -118,36 +119,35 @@ class _MakeInvoicePageState extends State<MakeInvoicePage> {
                       key: formKey,
                       child: AlertDialog(
                         title: const Text('Pilih Jasa'),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            DropdownSearch<BarangModel>(
-                              itemAsString: (item) => item.barangAsString,
-                              items: items,
-                              dropdownDecoratorProps:
-                                  const DropDownDecoratorProps(
-                                dropdownSearchDecoration: InputDecoration(
-                                  hintText: 'Jasa',
-                                ),
-                              ),
-                              popupProps: PopupProps.menu(
-                                showSearchBox: true,
-                                emptyBuilder: (context, searchEntry) =>
-                                    const Center(
-                                  child: Text(
-                                    'Tidak ada Data',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ),
-                              onChanged: (value) {
-                                if (value != null) {
-                                  barangCubit.addBarang = value;
-                                }
-                              },
+                        content: DropdownSearch<ServiceModel>(
+                          itemAsString: (item) => item.barangAsString,
+                          items: items,
+                          dropdownDecoratorProps: const DropDownDecoratorProps(
+                            dropdownSearchDecoration: InputDecoration(
+                              hintText: 'Jasa',
                             ),
-                          ],
+                          ),
+                          popupProps: PopupProps.menu(
+                            showSearchBox: true,
+                            emptyBuilder: (context, searchEntry) =>
+                                const Center(
+                              child: Text(
+                                'Tidak ada Data',
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                          onChanged: (value) {
+                            if (value != null) {
+                              barangCubit.addBarang = value;
+                            }
+                          },
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Mohon Isi Jasa';
+                            }
+                            return null;
+                          },
                         ),
                         actions: [
                           ElevatedButton(
@@ -181,7 +181,7 @@ class _MakeInvoicePageState extends State<MakeInvoicePage> {
               onTap: () async {
                 final InvoiceModel invoice = InvoiceModel(
                   namaPelanggan: 'Soleh',
-                  barangs: barangCubit.getBarangs,
+                  services: barangCubit.getServices,
                   boughtAt: DateTime.now(),
                 );
                 invoiceCubit.createInvoices(invoice);

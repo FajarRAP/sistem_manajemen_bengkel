@@ -6,7 +6,7 @@ sealed class BarangState {}
 final class BarangInitial extends BarangState {}
 
 class BarangLoaded extends BarangState {
-  final List<BarangModel> data;
+  final List<ServiceModel> data;
 
   BarangLoaded(this.data);
 }

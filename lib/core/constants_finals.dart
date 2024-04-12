@@ -15,12 +15,12 @@ const String makeInvoicePage = '${invoicePage}make/';
 const String detailInvoicePage = '${invoicePage}detail/';
 const String previewInvoicePage = '${invoicePage}preview/';
 
-final List<BarangModel> items = [
-  BarangModel(nama: 'Cat Full Body', harga: 12000000),
-  BarangModel(nama: 'Cat Per Panel', harga: 700000),
-  BarangModel(nama: 'Poles Cat Body', harga: 800000),
-  BarangModel(nama: 'Servis AC', harga: 1100000),
-  BarangModel(nama: 'Tune Up', harga: 600000),
-  BarangModel(nama: 'Modif Body Full Cat', harga: 15000000),
-  BarangModel(nama: 'Ganti Kapas Kopling', harga: 500000),
+final List<ServiceModel> items = [
+  ServiceModel(nama: 'Cat Full Body', harga: 12000000),
+  ServiceModel(nama: 'Cat Per Panel', harga: 700000),
+  ServiceModel(nama: 'Poles Cat Body', harga: 800000),
+  ServiceModel(nama: 'Servis AC', harga: 1100000),
+  ServiceModel(nama: 'Tune Up', harga: 600000),
+  ServiceModel(nama: 'Modif Body Full Cat', harga: 15000000),
+  ServiceModel(nama: 'Ganti Kapas Kopling', harga: 500000),
 ];

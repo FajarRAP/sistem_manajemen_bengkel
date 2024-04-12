@@ -7,27 +7,27 @@ part 'barang_state.dart';
 class BarangCubit extends Cubit<BarangState> {
   BarangCubit() : super(BarangInitial());
 
-  List<BarangModel> barangs = [];
+  List<ServiceModel> services = [];
 
   // Getter
-  List<BarangModel> get getBarangs => barangs;
+  List<ServiceModel> get getServices => services;
 
   // Setter
-  set addBarang(final BarangModel barang) => barangs.add(barang);
+  set addBarang(final ServiceModel barang) => services.add(barang);
 
-  void onCancelled() => barangs.removeLast();
+  void onCancelled() => services.removeLast();
 
   void getBarang() {
-    if (barangs.isEmpty) {
+    if (services.isEmpty) {
       emit(BarangEmpty());
     } else {
-      emit(BarangLoaded(barangs));
+      emit(BarangLoaded(services));
     }
   }
 
   void deleteAllItems() {
-    if (barangs.isNotEmpty) {
-      barangs.clear();
+    if (services.isNotEmpty) {
+      services.clear();
       emit(BarangEmpty());
     }
   }

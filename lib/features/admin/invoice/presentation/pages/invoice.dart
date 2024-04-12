@@ -25,7 +25,6 @@ class InvoicePage extends StatelessWidget {
           bloc: invoiceCubit..getInvoices(),
           buildWhen: (previous, current) => current is ReadInvoice,
           builder: (context, state) {
-            print(state);
             // Loading
             if (state is ReadInvoiceLoading) {
               return const Center(
@@ -78,12 +77,12 @@ class InvoicePage extends StatelessWidget {
             }
 
             // Error
-            // if (state is ReadInvoiceError) {
-            //   return TextButton(
-            //     onPressed: () {},
-            //     child: Text(state.message),
-            //   );
-            // }
+            if (state is ReadInvoiceError) {
+              return TextButton(
+                onPressed: () => invoiceCubit.getInvoices(),
+                child: Text(state.message),
+              );
+            }
 
             return Center(
               child: ElevatedButton(

@@ -55,13 +55,13 @@ Future<Uint8List> makePDF(final InvoiceModel invoice) async {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      invoice.barangs[index].nama,
+                      invoice.services[index].nama,
                       style: const TextStyle(
                         fontSize: 16,
                       ),
                     ),
                     Text(
-                      'Rp. ${invoice.barangs[index].formattedHarga}',
+                      'Rp. ${invoice.services[index].formattedHarga}',
                       style: const TextStyle(
                         fontSize: 14,
                       ),
@@ -70,7 +70,7 @@ Future<Uint8List> makePDF(final InvoiceModel invoice) async {
                 );
               },
               separatorBuilder: (context, index) => SizedBox(height: 12),
-              itemCount: invoice.barangs.length,
+              itemCount: invoice.services.length,
             ),
             Divider(),
             Row(
