@@ -11,6 +11,7 @@ final Map<String, String> headers = {'Content-Type': 'application/json'};
 
 // route name
 const String initialRoute = '/';
+const String registerPage = '${initialRoute}register/';
 const String loginPage = '${initialRoute}login/';
 const String invoicePage = '${initialRoute}invoice/';
 const String makeInvoicePage = '${invoicePage}make/';

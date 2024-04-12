@@ -9,4 +9,12 @@ class AuthService {
       body: body,
     );
   }
+
+  Future<Response> authRegister(final String body) async {
+    return await post(
+      Uri.parse('$url${endpoint['register']}'),
+      headers: headers,
+      body: body,
+    );
+  }
 }

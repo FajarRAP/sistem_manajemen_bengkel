@@ -20,3 +20,17 @@ class LoginError extends AuthState {
 
   LoginError(this.message);
 }
+
+class RegisterAuthenticating extends AuthState {}
+
+class RegisterAuthenticated extends AuthState {
+  final String message;
+
+  RegisterAuthenticated(this.message);
+}
+
+class RegisterError extends AuthState {
+  final String message;
+
+  RegisterError(this.message);
+}

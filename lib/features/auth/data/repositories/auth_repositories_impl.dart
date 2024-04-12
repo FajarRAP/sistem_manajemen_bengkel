@@ -21,4 +21,10 @@ class AuthRepositoriesImpl implements AuthRepositories {
       return Left(Failure(message: e.toString()));
     }
   }
+  
+  @override
+  Future<Either<Failure, String>> authRegister(final String body) async {
+    final Response response = await authService.authRegister(body);
+    return Right(response.body);
+  }
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bengkel_pak_bowo/features/auth/data/models/account.dart';
 import 'package:bengkel_pak_bowo/features/auth/data/models/login_credentials.dart';
 import 'package:bengkel_pak_bowo/features/auth/data/repositories/auth_repositories_impl.dart';
 import 'package:bengkel_pak_bowo/injection_container.dart';
@@ -32,11 +33,32 @@ class AuthCubit extends Cubit<AuthState> {
       },
       (success) {
         final Map<String, dynamic> responseDecoded = jsonDecode(success);
-        
+
         if (responseDecoded['statusCode'] == 200) {
           emit(LoginAuthenticated(responseDecoded['message']));
         } else {
           emit(LoginError(responseDecoded['message']));
+        }
+      },
+    );
+  }
+
+  Future<void> authRegister(final AccountModel account) async {
+    emit(RegisterAuthenticating());
+
+    final result = await locator<AuthRepositoriesImpl>()
+        .authRegister(accountToJson(account));
+
+    result.fold(
+      (failure) {
+        emit(RegisterError(failure.message));
+      },
+      (success) {
+        final Map<String, dynamic> responseDecoded = jsonDecode(success);
+        if (responseDecoded['statusCode'] == 201) {
+          emit(RegisterAuthenticated(responseDecoded['message']));
+        } else {
+          emit(RegisterError(responseDecoded['message']));
         }
       },
     );

@@ -3,7 +3,7 @@ import 'dart:convert';
 LoginCredentials loginFromJson(String str) =>
     LoginCredentials.fromJson(jsonDecode(str));
 
-String loginToJson(LoginCredentials data) => json.encode(data);
+String loginToJson(LoginCredentials data) => jsonEncode(data);
 
 class LoginCredentials {
   final String email;

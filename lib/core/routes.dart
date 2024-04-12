@@ -4,10 +4,12 @@ import 'package:bengkel_pak_bowo/features/admin/invoice/presentation/pages/invoi
 import 'package:bengkel_pak_bowo/features/admin/invoice/presentation/pages/make_invoice.dart';
 import 'package:bengkel_pak_bowo/features/admin/invoice/presentation/pages/preview_invoice.dart';
 import 'package:bengkel_pak_bowo/features/auth/presentation/pages/login.dart';
+import 'package:bengkel_pak_bowo/features/auth/presentation/pages/register.dart';
 import 'package:flutter/material.dart';
 
 class Routes {
   static Map<String, Widget Function(BuildContext context)> generateRoute = {
+    registerPage:(context) => const RegisterPage(),
     loginPage: (context) => const LoginPage(),
     invoicePage: (context) => const InvoicePage(),
     makeInvoicePage: (context) => const MakeInvoicePage(),
