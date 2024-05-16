@@ -6,6 +6,7 @@ import 'package:bengkel_pak_bowo/features/admin/invoice/presentation/pages/previ
 import 'package:bengkel_pak_bowo/features/auth/presentation/pages/register_screen.dart';
 import 'package:bengkel_pak_bowo/features/auth/presentation/pages/login.dart';
 import 'package:bengkel_pak_bowo/features/auth/presentation/pages/register.dart';
+import 'package:bengkel_pak_bowo/features/customer/home/presentation/pages/home.dart';
 import 'package:flutter/material.dart';
 
 class Routes {
@@ -17,5 +18,6 @@ class Routes {
     makeInvoicePage: (context) => const MakeInvoicePage(),
     detailInvoicePage: (context) => const DetailInvoicePage(),
     previewInvoicePage: (context) => const PreviewInvoicePage(),
+    homePage:(context) => const HomePage(),
   };
 }

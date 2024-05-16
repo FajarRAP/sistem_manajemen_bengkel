@@ -5,7 +5,8 @@ import 'package:bengkel_pak_bowo/features/auth/data/models/login_credentials.dar
 import 'package:bengkel_pak_bowo/features/auth/data/repositories/auth_repositories_impl.dart';
 import 'package:bengkel_pak_bowo/injection_container.dart';
 import 'package:bloc/bloc.dart';
-import 'package:http/http.dart';
+import 'package:flutter/material.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,8 +19,12 @@ class AuthCubit extends Cubit<AuthState> {
 
   bool isObsecure = false;
 
+  Map<String, dynamic> credentials =
+      JwtDecoder.decode(locator<SharedPreferences>().getString('token') ?? '');
+
   // Getter
   bool get getIsObsecure => isObsecure;
+  int get getRole => credentials['role'];
 
   void obsecurePassword() {
     isObsecure = !isObsecure;
@@ -71,17 +76,13 @@ class AuthCubit extends Cubit<AuthState> {
     );
   }
 
-  Future<void> tesLogin() async {
-    final Response response = await post(
-      Uri.parse('$url${endpoint['login']}'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'email': 'fajary781@gmail.com',
-        'password': 'pbinfinity',
-      }),
-    );
-
-    print(response.body);
+  void authLogout(BuildContext context) {
+    locator<SharedPreferences>().remove('token');
+    Navigator.pushReplacementNamed(context, loginPage);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: const Text('Berhasil Logout',
+            style: TextStyle(color: Colors.white)),
+        backgroundColor: Theme.of(context).colorScheme.primary));
   }
 
   String? validate(String? value) {

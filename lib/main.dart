@@ -6,6 +6,7 @@ import 'package:bengkel_pak_bowo/features/auth/presentation/cubit/auth_cubit.dar
 import 'package:bengkel_pak_bowo/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -13,7 +14,13 @@ void main() async {
   await dependencyInjection();
   final prefs = locator<SharedPreferences>();
   final String? token = prefs.getString('token');
-  runApp(MyApp(route: token != null ? invoicePage : loginPage));
+  final role = JwtDecoder.decode(token ?? '');
+  runApp(MyApp(
+      route: token != null
+          ? role['role'] == 0
+              ? homePage
+              : invoicePage
+          : loginPage));
 }
 
 class MyApp extends StatelessWidget {

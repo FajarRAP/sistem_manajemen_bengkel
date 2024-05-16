@@ -5,6 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../../core/constants_finals.dart';
+import '../../../../injection_container.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -53,7 +58,16 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           );
-          // Navigator.pushNamed(context, invoicePage);
+          authCubit.credentials = JwtDecoder.decode(
+              locator<SharedPreferences>().getString('token') ?? '');
+          switch (authCubit.getRole) {
+            case 0:
+              Navigator.pushNamed(context, homePage);
+              break;
+            case 1:
+              Navigator.pushNamed(context, invoicePage);
+            default:
+          }
         }
       },
       child: Scaffold(
@@ -203,13 +217,22 @@ class _LoginPageState extends State<LoginPage> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      child: const Text(
-                        'Masuk',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                        ),
+                      child: BlocBuilder<AuthCubit, AuthState>(
+                        builder: (context, state) {
+                          print(state);
+                          if (state is LoginAuthenticating) {
+                            return const CircularProgressIndicator(
+                                color: Colors.white);
+                          }
+                          return const Text(
+                            'Masuk',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),

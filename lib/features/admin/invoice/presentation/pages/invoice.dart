@@ -1,12 +1,9 @@
 import 'package:bengkel_pak_bowo/core/constants_finals.dart';
 import 'package:bengkel_pak_bowo/features/admin/invoice/presentation/cubit/invoice_cubit.dart';
+import 'package:bengkel_pak_bowo/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../../../../injection_container.dart';
 
 class InvoicePage extends StatelessWidget {
   const InvoicePage({super.key});
@@ -14,6 +11,7 @@ class InvoicePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final InvoiceCubit invoiceCubit = context.read<InvoiceCubit>();
+    final authCubit = context.read<AuthCubit>();
 
     return Scaffold(
       body: NestedScrollView(
@@ -22,11 +20,7 @@ class InvoicePage extends StatelessWidget {
             SliverAppBar(
               centerTitle: true,
               leading: IconButton(
-                onPressed: () {
-                  locator<SharedPreferences>().remove('token');
-                  Navigator.pushReplacementNamed(context, loginPage);
-                  print('logout');
-                },
+                onPressed: () => authCubit.authLogout(context),
                 icon: const Icon(Icons.logout),
               ),
               title: const Text('Transaksi'),

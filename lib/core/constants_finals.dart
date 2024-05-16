@@ -20,6 +20,7 @@ const String invoicePage = '${initialRoute}invoice/';
 const String makeInvoicePage = '${invoicePage}make/';
 const String detailInvoicePage = '${invoicePage}detail/';
 const String previewInvoicePage = '${invoicePage}preview/';
+const String homePage = '${initialRoute}home/';
 
 final List<ServiceModel> items = [
   ServiceModel(nama: 'Cat Full Body', harga: 12000000),
