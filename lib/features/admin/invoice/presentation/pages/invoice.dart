@@ -19,9 +19,17 @@ class InvoicePage extends StatelessWidget {
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
-            const SliverAppBar(
+            SliverAppBar(
               centerTitle: true,
-              title: Text('Transaksi'),
+              leading: IconButton(
+                onPressed: () {
+                  locator<SharedPreferences>().remove('token');
+                  Navigator.pushReplacementNamed(context, loginPage);
+                  print('logout');
+                },
+                icon: const Icon(Icons.logout),
+              ),
+              title: const Text('Transaksi'),
             ),
           ];
         },
@@ -85,7 +93,6 @@ class InvoicePage extends StatelessWidget {
               return Center(
                 child: TextButton(
                   onPressed: () async {
-                    
                     // print(prefs.getString('token'));
                     // await prefs.remove('token');
                     // await Future.delayed(const Duration(seconds: 1));

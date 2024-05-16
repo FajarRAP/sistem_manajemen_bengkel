@@ -1,8 +1,7 @@
-import 'package:bengkel_pak_bowo/core/constants_finals.dart';
 import 'package:bengkel_pak_bowo/features/auth/data/models/login_credentials.dart';
 import 'package:bengkel_pak_bowo/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,13 +14,17 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final emailController = TextEditingController();
+  final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     final AuthCubit authCubit = context.read<AuthCubit>();
+    final color = Theme.of(context).colorScheme;
+    final iconPassword = !authCubit.getIsObsecure
+        ? Icon(CupertinoIcons.eye_fill, color: color.primary)
+        : Icon(CupertinoIcons.eye_slash_fill, color: color.primary);
 
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
@@ -50,174 +53,209 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           );
-          Navigator.pushNamed(context, invoicePage);
+          // Navigator.pushNamed(context, invoicePage);
         }
       },
       child: Scaffold(
-        body: Container(
-          width: double.infinity,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFF62C664),
-                Color(0xFF62C696),
-              ],
-              begin: Alignment.centerLeft,
-              end: Alignment.topRight,
-            ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.asset(
-                      'assets/logo.png',
-                      width: 50,
-                    ),
-                  ),
-                  const Gap(16),
-                  Text(
-                    'AlphaWorks',
-                    style: GoogleFonts.roboto(
-                      fontSize: 18,
+        body: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            Stack(
+              children: [
+                Image.asset('assets/login.png'),
+                Positioned(
+                  top: 110,
+                  left: 20,
+                  child: Text(
+                    'SELAMAT DATANG',
+                    style: GoogleFonts.plusJakartaSans(
+                      color: Colors.white,
+                      fontSize: 35,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
+                ),
+                Positioned(
+                  top: 150,
+                  left: 20,
+                  child: Text(
+                    'di Bengkel Bowo!',
+                    style: GoogleFonts.plusJakartaSans(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(30),
+                ),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 36,
+                    spreadRadius: 1,
+                    offset: const Offset(0, -5),
+                    color: Colors.black.withOpacity(.25),
+                  ),
                 ],
               ),
-              const Gap(20),
-              Text(
-                'Bengkel Pak Bowo',
-                style: GoogleFonts.roboto(fontSize: 16),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 30,
+                vertical: 20,
               ),
-              const Gap(35),
-              SizedBox(
-                width: 300,
-                height: 270,
-                child: Stack(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(28),
-                        color: const Color(0xFF89D98A),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(.7),
-                            blurRadius: 20,
-                            spreadRadius: 1,
-                            offset: const Offset(0, 5),
-                          )
-                        ],
-                      ),
-                      padding: const EdgeInsets.all(24),
-                      width: 300,
-                      height: 250,
-                      child: Form(
-                        key: formKey,
-                        child: Column(
-                          children: <Widget>[
-                            TextFormField(
-                              controller: emailController,
-                              decoration: const InputDecoration(
-                                hintText: 'Email',
+              width: double.infinity,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.asset(
+                    'assets/logo-no-bg.png',
+                    scale: 2,
+                  ),
+                  Text(
+                    'Login',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 40,
+                      color: color.primary,
+                    ),
+                  ),
+                  const Gap(12),
+                  Form(
+                    key: formKey,
+                    child: Column(
+                      children: [
+                        TextFormField(
+                            controller: usernameController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                              validator: (value) {
-                                if (value?.trim() == "") {
-                                  return "Form Harus Diisi";
-                                }
-                                return null;
-                              },
+                              label: const Text('Username'),
                             ),
-                            const Gap(16),
-                            BlocBuilder<AuthCubit, AuthState>(
-                              builder: (context, state) {
-                                return TextFormField(
-                                  controller: passwordController,
-                                  decoration: InputDecoration(
-                                    hintText: 'Password',
-                                    suffixIcon: IconButton(
-                                      onPressed: () =>
-                                          authCubit.obsecurePassword(),
-                                      icon: !authCubit.getIsObsecure
-                                          ? const Icon(CupertinoIcons.eye_fill)
-                                          : const Icon(
-                                              CupertinoIcons.eye_slash_fill),
-                                    ),
+                            validator: authCubit.validate),
+                        const Gap(12),
+                        BlocBuilder<AuthCubit, AuthState>(
+                          builder: (context, state) {
+                            return TextFormField(
+                                controller: passwordController,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                  obscureText: !authCubit.getIsObsecure,
-                                  validator: (value) {
-                                    if (value?.trim() == "") {
-                                      return "Form Harus Diisi";
-                                    }
-                                    return null;
-                                  },
-                                );
-                              },
+                                  label: const Text('Password'),
+                                  suffixIcon: IconButton(
+                                    onPressed: authCubit.obsecurePassword,
+                                    icon: iconPassword,
+                                  ),
+                                ),
+                                obscureText: !authCubit.getIsObsecure,
+                                validator: authCubit.validate);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Gap(12),
+                  RichText(
+                    text: TextSpan(
+                      children: <TextSpan>[
+                        const TextSpan(
+                          text: 'Lupa Password? ',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        TextSpan(
+                          text: 'Klik Di Sini',
+                          style: TextStyle(
+                            color: color.primary,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Gap(36),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 55,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          final LoginCredentials data = LoginCredentials(
+                            email: usernameController.text,
+                            password: passwordController.text,
+                          );
+                          authCubit.authLogin(data);
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: color.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: const Text(
+                        'Masuk',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Gap(18),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: InkWell(
+                      onTap: () {
+                        print('register');
+                      },
+                      child: RichText(
+                        text: TextSpan(
+                          children: <TextSpan>[
+                            const TextSpan(
+                              text: 'Belum Punya Akun? ',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            TextSpan(
+                              text: 'Daftar Di Sini',
+                              style: TextStyle(
+                                color: color.primary,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ],
                         ),
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: SizedBox(
-                        width: 125,
-                        height: 50,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (formKey.currentState!.validate()) {
-                              final LoginCredentials data = LoginCredentials(
-                                email: emailController.text,
-                                password: passwordController.text,
-                              );
-                              authCubit.authLogin(data);
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            splashFactory: InkRipple.splashFactory,
-                          ),
-                          child: Center(
-                            child: BlocBuilder<AuthCubit, AuthState>(
-                              builder: (context, state) {
-                                if (state is LoginAuthenticating) {
-                                  return const CircularProgressIndicator();
-                                }
-                                return Text(
-                                  'Login',
-                                  style: GoogleFonts.roboto(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-        resizeToAvoidBottomInset: true,
       ),
     );
   }
 
   @override
   void dispose() {
-    emailController.dispose();
+    usernameController.dispose();
     passwordController.dispose();
     super.dispose();
   }

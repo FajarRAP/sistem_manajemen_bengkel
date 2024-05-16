@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:bengkel_pak_bowo/core/constants_finals.dart';
 import 'package:bengkel_pak_bowo/core/routes.dart';
 import 'package:bengkel_pak_bowo/features/admin/invoice/presentation/cubit/barang_cubit.dart';
@@ -38,7 +36,7 @@ class MyApp extends StatelessWidget {
         title: 'Bengkel Pak Bowo',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF62C696),
+            seedColor: const Color(0xFF375DFF),
           ),
           useMaterial3: true,
         ),

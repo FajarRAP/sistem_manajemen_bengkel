@@ -11,6 +11,7 @@ class AuthRepositoriesImpl implements AuthRepositories {
   @override
   Future<Either<Failure, String>> authLogin(final String body) async {
     try {
+      // print(body);
       final Response response = await authService.authLogin(body);
       if (response.statusCode > 0) {
         return Right(response.body);

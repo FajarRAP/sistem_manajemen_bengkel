@@ -8,6 +8,9 @@ final Map<String, String> endpoint = {
   'login': 'login',
   'register': 'register',
 };
+final Map<String, String> headers = {
+  'Content-Type': 'application/json',
+};
 
 // route name
 const String initialRoute = '/';
