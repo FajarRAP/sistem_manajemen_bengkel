@@ -17,6 +17,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -115,35 +116,50 @@ class _LoginPageState extends State<LoginPage> {
                       padding: const EdgeInsets.all(24),
                       width: 300,
                       height: 250,
-                      child: Column(
-                        children: <Widget>[
-                          TextField(
-                            controller: emailController,
-                            decoration: const InputDecoration(
-                              hintText: 'Email',
+                      child: Form(
+                        key: formKey,
+                        child: Column(
+                          children: <Widget>[
+                            TextFormField(
+                              controller: emailController,
+                              decoration: const InputDecoration(
+                                hintText: 'Email',
+                              ),
+                              validator: (value) {
+                                if (value?.trim() == "") {
+                                  return "Form Harus Diisi";
+                                }
+                                return null;
+                              },
                             ),
-                          ),
-                          const Gap(16),
-                          BlocBuilder<AuthCubit, AuthState>(
-                            builder: (context, state) {
-                              return TextField(
-                                controller: passwordController,
-                                decoration: InputDecoration(
-                                  hintText: 'Password',
-                                  suffixIcon: IconButton(
-                                    onPressed: () =>
-                                        authCubit.obsecurePassword(),
-                                    icon: authCubit.getIsObsecure
-                                        ? const Icon(CupertinoIcons.eye_fill)
-                                        : const Icon(
-                                            CupertinoIcons.eye_slash_fill),
+                            const Gap(16),
+                            BlocBuilder<AuthCubit, AuthState>(
+                              builder: (context, state) {
+                                return TextFormField(
+                                  controller: passwordController,
+                                  decoration: InputDecoration(
+                                    hintText: 'Password',
+                                    suffixIcon: IconButton(
+                                      onPressed: () =>
+                                          authCubit.obsecurePassword(),
+                                      icon: !authCubit.getIsObsecure
+                                          ? const Icon(CupertinoIcons.eye_fill)
+                                          : const Icon(
+                                              CupertinoIcons.eye_slash_fill),
+                                    ),
                                   ),
-                                ),
-                                obscureText: authCubit.getIsObsecure,
-                              );
-                            },
-                          ),
-                        ],
+                                  obscureText: !authCubit.getIsObsecure,
+                                  validator: (value) {
+                                    if (value?.trim() == "") {
+                                      return "Form Harus Diisi";
+                                    }
+                                    return null;
+                                  },
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     Align(
@@ -153,11 +169,13 @@ class _LoginPageState extends State<LoginPage> {
                         height: 50,
                         child: ElevatedButton(
                           onPressed: () {
-                            final LoginCredentials data = LoginCredentials(
-                              email: emailController.text,
-                              password: passwordController.text,
-                            );
-                            authCubit.authLogin(data);
+                            if (formKey.currentState!.validate()) {
+                              final LoginCredentials data = LoginCredentials(
+                                email: emailController.text,
+                                password: passwordController.text,
+                              );
+                              authCubit.authLogin(data);
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.black,

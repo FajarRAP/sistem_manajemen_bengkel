@@ -3,6 +3,10 @@ import 'package:bengkel_pak_bowo/features/admin/invoice/presentation/cubit/invoi
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../../../injection_container.dart';
 
 class InvoicePage extends StatelessWidget {
   const InvoicePage({super.key});
@@ -78,9 +82,18 @@ class InvoicePage extends StatelessWidget {
 
             // Error
             if (state is ReadInvoiceError) {
-              return TextButton(
-                onPressed: () => invoiceCubit.getInvoices(),
-                child: Text(state.message),
+              return Center(
+                child: TextButton(
+                  onPressed: () async {
+                    
+                    // print(prefs.getString('token'));
+                    // await prefs.remove('token');
+                    // await Future.delayed(const Duration(seconds: 1));
+                    // if (!context.mounted) return;
+                    // Navigator.pushReplacementNamed(context, loginPage);
+                  },
+                  child: Text(state.message),
+                ),
               );
             }
 

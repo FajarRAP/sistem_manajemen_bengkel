@@ -17,6 +17,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final nameControlller = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -52,163 +53,179 @@ class _RegisterPageState extends State<RegisterPage> {
         }
       },
       child: Scaffold(
-        body: LayoutBuilder(
-          builder: (context, constraint) {
-            return Container(
-              width: double.infinity,
-              constraints: BoxConstraints(
-                minHeight: constraint.maxHeight,
-              ),
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFF62C664),
-                    Color(0xFF62C696),
-                  ],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.topRight,
-                ),
-              ),
-              child: Center(
-                child: SingleChildScrollView(
-                  child: Column(
+        body: Container(
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF62C664),
+                Color(0xFF62C696),
+              ],
+              begin: Alignment.centerLeft,
+              end: Alignment.topRight,
+            ),
+          ),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.asset(
-                              'assets/logo.png',
-                              width: 50,
-                            ),
-                          ),
-                          const Gap(16),
-                          Text(
-                            'AlphaWorks',
-                            style: GoogleFonts.roboto(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                        ],
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.asset(
+                          'assets/logo.png',
+                          width: 50,
+                        ),
                       ),
-                      const Gap(20),
+                      const Gap(16),
                       Text(
-                        'Bengkel Pak Bowo',
-                        style: GoogleFonts.roboto(fontSize: 16),
-                      ),
-                      const Gap(35),
-                      SizedBox(
-                        width: 300,
-                        height: 325,
-                        child: Stack(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(28),
-                                color: const Color(0xFF89D98A),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(.7),
-                                    blurRadius: 20,
-                                    spreadRadius: 1,
-                                    offset: const Offset(0, 5),
-                                  )
-                                ],
-                              ),
-                              padding: const EdgeInsets.all(24),
-                              width: 300,
-                              height: 300,
-                              child: Column(
-                                children: <Widget>[
-                                  TextField(
-                                    controller: nameControlller,
-                                    decoration: const InputDecoration(
-                                      hintText: 'Nama',
-                                    ),
-                                  ),
-                                  const Gap(16),
-                                  TextField(
-                                    controller: emailController,
-                                    decoration: const InputDecoration(
-                                      hintText: 'Email',
-                                    ),
-                                  ),
-                                  const Gap(16),
-                                  BlocBuilder<AuthCubit, AuthState>(
-                                    builder: (context, state) {
-                                      return TextField(
-                                        controller: passwordController,
-                                        decoration: InputDecoration(
-                                          hintText: 'Password',
-                                          suffixIcon: IconButton(
-                                            onPressed: () =>
-                                                authCubit.obsecurePassword(),
-                                            icon: authCubit.getIsObsecure
-                                                ? const Icon(
-                                                    CupertinoIcons.eye_fill)
-                                                : const Icon(CupertinoIcons
-                                                    .eye_slash_fill),
-                                          ),
-                                        ),
-                                        obscureText: authCubit.getIsObsecure,
-                                      );
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.bottomCenter,
-                              child: SizedBox(
-                                width: 125,
-                                height: 50,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    final AccountModel account = AccountModel(
-                                      name: nameControlller.text,
-                                      email: emailController.text,
-                                      password: passwordController.text,
-                                    );
-                                    authCubit.authRegister(account);
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.black,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: BlocBuilder<AuthCubit, AuthState>(
-                                      builder: (context, state) {
-                                        if (state is RegisterAuthenticating) {
-                                          return const CircularProgressIndicator();
-                                        }
-                                        return Text(
-                                          'Register',
-                                          style: GoogleFonts.roboto(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                        'AlphaWorks',
+                        style: GoogleFonts.roboto(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
                     ],
                   ),
-                ),
+                  const Gap(20),
+                  Text(
+                    'Bengkel Pak Bowo',
+                    style: GoogleFonts.roboto(fontSize: 16),
+                  ),
+                  const Gap(35),
+                  SizedBox(
+                    width: 300,
+                    height: 350,
+                    child: Stack(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(28),
+                            color: const Color(0xFF89D98A),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(.7),
+                                blurRadius: 20,
+                                spreadRadius: 1,
+                                offset: const Offset(0, 5),
+                              )
+                            ],
+                          ),
+                          padding: const EdgeInsets.all(24),
+                          width: 300,
+                          height: 325,
+                          child: Form(
+                            key: formKey,
+                            child: Column(
+                              children: <Widget>[
+                                TextFormField(
+                                  controller: nameControlller,
+                                  decoration: const InputDecoration(
+                                    hintText: 'Nama',
+                                  ),
+                                  validator: (value) {
+                                    if (value?.trim() == "") {
+                                      return "Form Harus Diisi";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const Gap(16),
+                                TextFormField(
+                                  controller: emailController,
+                                  decoration: const InputDecoration(
+                                    hintText: 'Email',
+                                  ),
+                                  validator: (value) {
+                                    if (value?.trim() == "") {
+                                      return "Form Harus Diisi";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const Gap(16),
+                                BlocBuilder<AuthCubit, AuthState>(
+                                  builder: (context, state) {
+                                    return TextFormField(
+                                      controller: passwordController,
+                                      decoration: InputDecoration(
+                                        hintText: 'Password',
+                                        suffixIcon: IconButton(
+                                          onPressed: () =>
+                                              authCubit.obsecurePassword(),
+                                          icon: authCubit.getIsObsecure
+                                              ? const Icon(
+                                                  CupertinoIcons.eye_fill)
+                                              : const Icon(CupertinoIcons
+                                                  .eye_slash_fill),
+                                        ),
+                                      ),
+                                      obscureText: authCubit.getIsObsecure,
+                                      validator: (value) {
+                                        if (value?.trim() == "") {
+                                          return "Form Harus Diisi";
+                                        }
+                                        return null;
+                                      },
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: SizedBox(
+                            width: 125,
+                            height: 50,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                if (formKey.currentState!.validate()) {
+                                  final AccountModel account = AccountModel(
+                                    name: nameControlller.text,
+                                    email: emailController.text,
+                                    password: passwordController.text,
+                                  );
+                                  authCubit.authRegister(account);
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.black,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: Center(
+                                child: BlocBuilder<AuthCubit, AuthState>(
+                                  builder: (context, state) {
+                                    if (state is RegisterAuthenticating) {
+                                      return const CircularProgressIndicator();
+                                    }
+                                    return Text(
+                                      'Register',
+                                      style: GoogleFonts.roboto(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            );
-          },
+            ),
+          ),
         ),
         resizeToAvoidBottomInset: true,
       ),

@@ -3,10 +3,11 @@ import 'package:bengkel_pak_bowo/features/admin/invoice/data/repositories/invoic
 import 'package:bengkel_pak_bowo/features/auth/data/data_sources/remote.dart';
 import 'package:bengkel_pak_bowo/features/auth/data/repositories/auth_repositories_impl.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final GetIt locator = GetIt.instance;
 
-void dependencyInjection() {
+Future<void> dependencyInjection() async {
   // Invoice
   locator.registerLazySingleton(() => InvoiceServices());
   locator.registerLazySingleton(
@@ -18,4 +19,10 @@ void dependencyInjection() {
   locator.registerLazySingleton(
     () => AuthRepositoriesImpl(locator<AuthService>()),
   );
+
+  // Sharedpreferences
+  locator.registerLazySingletonAsync(
+    () => SharedPreferences.getInstance(),
+  );
+  await locator.isReady<SharedPreferences>();
 }

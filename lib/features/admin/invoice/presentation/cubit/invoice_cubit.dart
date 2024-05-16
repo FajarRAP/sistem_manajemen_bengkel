@@ -5,7 +5,9 @@ import 'package:bengkel_pak_bowo/features/admin/invoice/data/models/invoice.dart
 import 'package:bengkel_pak_bowo/features/admin/invoice/data/repositories/invoice_repositories_impl.dart';
 import 'package:bengkel_pak_bowo/injection_container.dart';
 import 'package:bloc/bloc.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:meta/meta.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'invoice_state.dart';
 
@@ -23,7 +25,15 @@ class InvoiceCubit extends Cubit<InvoiceState> {
   Future<void> getInvoices() async {
     emit(ReadInvoiceLoading());
 
-    final results = await locator<InvoiceRepositoriesImpl>().getInvoices();
+    final Map<String, String> headers = {
+      'Authorization': locator<SharedPreferences>().getString('token') ?? ''
+    };
+
+    final results =
+        await locator<InvoiceRepositoriesImpl>().getInvoices(headers);
+
+    final prefs = locator<SharedPreferences>();
+    print(JwtDecoder.decode(prefs.getString('token') ?? ''));
 
     results.fold(
       (failure) {
@@ -41,11 +51,14 @@ class InvoiceCubit extends Cubit<InvoiceState> {
     );
   }
 
-  Future<void> createInvoices(final InvoiceModel invoice) async {
+  Future<void> createInvoice(final InvoiceModel invoice) async {
     emit(InvoiceCreating());
 
+    final Map<String, String> headers = {
+      'Authorization': locator<SharedPreferences>().getString('token') ?? ''
+    };
     final results = await locator<InvoiceRepositoriesImpl>()
-        .createInvoices(invoiceToJson(invoice));
+        .createInvoices(headers, invoiceToJson(invoice));
 
     results.fold(
       (failure) {

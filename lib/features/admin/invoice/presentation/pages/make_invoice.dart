@@ -184,7 +184,7 @@ class _MakeInvoicePageState extends State<MakeInvoicePage> {
                   services: barangCubit.getServices,
                   boughtAt: DateTime.now(),
                 );
-                invoiceCubit.createInvoices(invoice);
+                invoiceCubit.createInvoice(invoice);
               },
               child: const Icon(Icons.document_scanner_rounded),
             ),

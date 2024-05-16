@@ -1,13 +1,13 @@
 import 'package:bengkel_pak_bowo/features/admin/invoice/data/models/barang.dart';
 
 // API
-const String url = 'https://bengkel-pak-bowo-services.vercel.app/';
+// const String url = 'https://bengkel-pak-bowo-services.vercel.app/';
+const String url = 'http://10.0.2.2:3001/';
 final Map<String, String> endpoint = {
   'invoice': 'invoice',
   'login': 'login',
   'register': 'register',
 };
-final Map<String, String> headers = {'Content-Type': 'application/json'};
 
 // route name
 const String initialRoute = '/';

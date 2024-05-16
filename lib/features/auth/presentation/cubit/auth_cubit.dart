@@ -6,6 +6,7 @@ import 'package:bengkel_pak_bowo/features/auth/data/repositories/auth_repositori
 import 'package:bengkel_pak_bowo/injection_container.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'auth_state.dart';
 
@@ -31,8 +32,11 @@ class AuthCubit extends Cubit<AuthState> {
       (failure) {
         emit(LoginError(failure.message));
       },
-      (success) {
+      (success) async {
         final Map<String, dynamic> responseDecoded = jsonDecode(success);
+        print(responseDecoded);
+        final prefs = locator<SharedPreferences>();
+        await prefs.setString('token', responseDecoded['token']);
 
         if (responseDecoded['statusCode'] == 200) {
           emit(LoginAuthenticated(responseDecoded['message']));
@@ -55,6 +59,7 @@ class AuthCubit extends Cubit<AuthState> {
       },
       (success) {
         final Map<String, dynamic> responseDecoded = jsonDecode(success);
+
         if (responseDecoded['statusCode'] == 201) {
           emit(RegisterAuthenticated(responseDecoded['message']));
         } else {
