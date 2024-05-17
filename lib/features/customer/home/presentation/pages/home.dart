@@ -6,8 +6,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final pageController = PageController();
+  int currentPage = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -81,9 +89,9 @@ class HomePage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      const Text(
+                      Text(
                         'Ambil Antrianmu',
-                        style: TextStyle(
+                        style: GoogleFonts.plusJakartaSans(
                             fontSize: 20, fontWeight: FontWeight.w600),
                       ),
                       const Gap(12),
@@ -91,15 +99,15 @@ class HomePage extends StatelessWidget {
                         width: double.infinity,
                         height: 50,
                         child: ElevatedButton(
+                          onPressed: () {},
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8)),
                             backgroundColor: color.primary,
                           ),
-                          onPressed: () {},
-                          child: const Text(
+                          child: Text(
                             'Ambil',
-                            style: TextStyle(
+                            style: GoogleFonts.plusJakartaSans(
                                 color: Colors.white,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600),
@@ -109,9 +117,9 @@ class HomePage extends StatelessWidget {
                       const Gap(40),
                       Row(
                         children: [
-                          const Text(
+                          Text(
                             'Antrian saat ini :',
-                            style: TextStyle(
+                            style: GoogleFonts.plusJakartaSans(
                                 fontSize: 16, fontWeight: FontWeight.w500),
                           ),
                           const Gap(10),
@@ -122,16 +130,14 @@ class HomePage extends StatelessWidget {
                             ),
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 14, vertical: 4),
-                            child: const Row(
+                            child: Row(
                               children: [
-                                Icon(
-                                  CupertinoIcons.timer,
-                                  color: Colors.white,
-                                ),
-                                Gap(12),
+                                const Icon(CupertinoIcons.timer,
+                                    color: Colors.white),
+                                const Gap(12),
                                 Text(
                                   '9',
-                                  style: TextStyle(
+                                  style: GoogleFonts.plusJakartaSans(
                                       color: Colors.white,
                                       fontSize: 20,
                                       fontWeight: FontWeight.w800),
@@ -179,15 +185,94 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
+      Container(
+        color: Colors.transparent,
+        width: double.infinity,
+        height: double.infinity,
+        child: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.vertical(
+                  bottom: Radius.circular(40),
+                ),
+                color: color.primary,
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              width: double.infinity,
+              height: 230,
+              child: Align(
+                alignment: const Alignment(0, -.6),
+                child: Text(
+                  'Daftar Transaksi',
+                  style: GoogleFonts.plusJakartaSans(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      Center(
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 7,
+                spreadRadius: 1,
+                color: Colors.black.withOpacity(.25),
+              ),
+            ],
+            color: Colors.white,
+          ),
+          margin: const EdgeInsets.symmetric(horizontal: 30),
+          padding: const EdgeInsets.all(30),
+          width: double.infinity,
+          height: 640,
+          child: Column(
+            children: [
+              Text(
+                'Profil',
+                style: GoogleFonts.plusJakartaSans(
+                    fontSize: 20, fontWeight: FontWeight.w600),
+              ),
+              Text(
+                authCubit.credentials['name'],
+                style: GoogleFonts.plusJakartaSans(
+                    fontSize: 20, fontWeight: FontWeight.w600),
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => authCubit.authLogout(context),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: color.primary,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8))),
+                  child: Text(
+                    'Logout',
+                    style: GoogleFonts.plusJakartaSans(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     ];
+
     return Scaffold(
-      // appBar: AppBar(
-      //   leading: IconButton(
-      //     onPressed: () => authCubit.authLogout(context),
-      //     icon: const Icon(Icons.logout),
-      //   ),
-      // ),
-      body: pages[0],
+      body: PageView(
+        controller: pageController,
+        onPageChanged: (value) => setState(() => currentPage = value),
+        children: pages,
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Container(
         decoration: BoxDecoration(
@@ -208,23 +293,48 @@ class HomePage extends StatelessWidget {
         child: NavigationBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
-          destinations: const [
+          selectedIndex: currentPage,
+          destinations: [
             NavigationDestination(
-              icon: Icon(Icons.home),
-              label: 'Home',
+              icon: const Icon(Icons.home),
+              label: 'Utama',
+              selectedIcon: Icon(
+                Icons.home,
+                color: color.primary,
+                size: 28,
+              ),
             ),
             NavigationDestination(
-              icon: Icon(CupertinoIcons.news_solid),
+              icon: const Icon(CupertinoIcons.news_solid),
               label: 'Transaksi',
+              selectedIcon: Icon(
+                CupertinoIcons.news_solid,
+                color: color.primary,
+                size: 28,
+              ),
             ),
             NavigationDestination(
-              icon: Icon(Icons.person),
+              icon: const Icon(Icons.person),
               label: 'Profil',
+              selectedIcon: Icon(
+                Icons.person,
+                color: color.primary,
+                size: 28,
+              ),
             ),
           ],
-          onDestinationSelected: (value) => print(value),
+          onDestinationSelected: (value) {
+            pageController.jumpToPage(value);
+            setState(() => currentPage = value);
+          },
         ),
       ),
     );
   }
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
+  }
 }
+

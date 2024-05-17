@@ -1,10 +1,15 @@
 import 'package:bengkel_pak_bowo/features/auth/data/models/account.dart';
 import 'package:bengkel_pak_bowo/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:bengkel_pak_bowo/features/auth/presentation/widgets/text_field_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../../core/constants_finals.dart';
+import '../../../../injection_container.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -14,14 +19,15 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final nameControlller = TextEditingController();
-  final emailController = TextEditingController();
+  final nameController = TextEditingController();
+  final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    final AuthCubit authCubit = context.read<AuthCubit>();
+    final authCubit = context.read<AuthCubit>();
+    final color = Theme.of(context).colorScheme;
 
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
@@ -53,189 +59,179 @@ class _RegisterPageState extends State<RegisterPage> {
         }
       },
       child: Scaffold(
-        body: Container(
-          width: double.infinity,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFF62C664),
-                Color(0xFF62C696),
+        body: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            // Seksi Atas
+            Stack(
+              children: [
+                Image.asset('assets/login.png'),
+                Positioned(
+                  top: 110,
+                  left: 20,
+                  child: Text(
+                    'SELAMAT DATANG',
+                    style: GoogleFonts.plusJakartaSans(
+                      color: Colors.white,
+                      fontSize: 35,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 150,
+                  left: 20,
+                  child: Text(
+                    'di Bengkel Bowo!',
+                    style: GoogleFonts.plusJakartaSans(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600),
+                  ),
+                ),
               ],
-              begin: Alignment.centerLeft,
-              end: Alignment.topRight,
             ),
-          ),
-          child: Center(
-            child: SingleChildScrollView(
+
+            // Seksi Bawah
+            Container(
+              decoration: BoxDecoration(
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(30)),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                      blurRadius: 36,
+                      spreadRadius: 1,
+                      offset: const Offset(0, -5),
+                      color: Colors.black.withOpacity(.25)),
+                ],
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+              width: double.infinity,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.asset(
-                          'assets/logo.png',
-                          width: 50,
-                        ),
-                      ),
-                      const Gap(16),
-                      Text(
-                        'AlphaWorks',
-                        style: GoogleFonts.roboto(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ],
+                  // Logo Alphaworks
+                  Image.asset(
+                    'assets/logo-no-bg.png',
+                    scale: 2,
                   ),
-                  const Gap(20),
+                  // Teks Daftar
                   Text(
-                    'Bengkel Pak Bowo',
-                    style: GoogleFonts.roboto(fontSize: 16),
+                    'Daftar',
+                    style: GoogleFonts.plusJakartaSans(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 40,
+                        color: color.primary),
                   ),
-                  const Gap(35),
-                  SizedBox(
-                    width: 300,
-                    height: 350,
-                    child: Stack(
+                  const Gap(12),
+                  // Form Validasi
+                  Form(
+                    key: formKey,
+                    child: Column(
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(28),
-                            color: const Color(0xFF89D98A),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(.7),
-                                blurRadius: 20,
-                                spreadRadius: 1,
-                                offset: const Offset(0, 5),
-                              )
-                            ],
-                          ),
-                          padding: const EdgeInsets.all(24),
-                          width: 300,
-                          height: 325,
-                          child: Form(
-                            key: formKey,
-                            child: Column(
-                              children: <Widget>[
-                                TextFormField(
-                                  controller: nameControlller,
-                                  decoration: const InputDecoration(
-                                    hintText: 'Nama',
-                                  ),
-                                  validator: (value) {
-                                    if (value?.trim() == "") {
-                                      return "Form Harus Diisi";
-                                    }
-                                    return null;
-                                  },
-                                ),
-                                const Gap(16),
-                                TextFormField(
-                                  controller: emailController,
-                                  decoration: const InputDecoration(
-                                    hintText: 'Email',
-                                  ),
-                                  validator: (value) {
-                                    if (value?.trim() == "") {
-                                      return "Form Harus Diisi";
-                                    }
-                                    return null;
-                                  },
-                                ),
-                                const Gap(16),
-                                BlocBuilder<AuthCubit, AuthState>(
-                                  builder: (context, state) {
-                                    return TextFormField(
-                                      controller: passwordController,
-                                      decoration: InputDecoration(
-                                        hintText: 'Password',
-                                        suffixIcon: IconButton(
-                                          onPressed: () =>
-                                              authCubit.obsecurePassword(),
-                                          icon: authCubit.getIsObsecure
-                                              ? const Icon(
-                                                  CupertinoIcons.eye_fill)
-                                              : const Icon(CupertinoIcons
-                                                  .eye_slash_fill),
-                                        ),
-                                      ),
-                                      obscureText: authCubit.getIsObsecure,
-                                      validator: (value) {
-                                        if (value?.trim() == "") {
-                                          return "Form Harus Diisi";
-                                        }
-                                        return null;
-                                      },
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: SizedBox(
-                            width: 125,
-                            height: 50,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                if (formKey.currentState!.validate()) {
-                                  final AccountModel account = AccountModel(
-                                    name: nameControlller.text,
-                                    email: emailController.text,
-                                    password: passwordController.text,
-                                  );
-                                  authCubit.authRegister(account);
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.black,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                              child: Center(
-                                child: BlocBuilder<AuthCubit, AuthState>(
-                                  builder: (context, state) {
-                                    if (state is RegisterAuthenticating) {
-                                      return const CircularProgressIndicator();
-                                    }
-                                    return Text(
-                                      'Register',
-                                      style: GoogleFonts.roboto(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
+                        // Form Nama
+                        TextFieldAuth(
+                            controller: nameController,
+                            isPassword: false,
+                            label: 'Nama'),
+                        const Gap(12),
+                        // Form Username
+                        TextFieldAuth(
+                            controller: usernameController,
+                            isPassword: false,
+                            label: 'Username'),
+                        const Gap(12),
+                        // Form Password
+                        BlocBuilder<AuthCubit, AuthState>(
+                            builder: (context, state) => TextFieldAuth(
+                                controller: passwordController,
+                                isPassword: true,
+                                label: 'Password')),
                       ],
+                    ),
+                  ),
+                  const Gap(12),
+
+                  const Gap(36),
+                  // Button Masuk
+                  SizedBox(
+                    width: double.infinity,
+                    height: 55,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          authCubit.authRegister(AccountModel(
+                              name: nameController.text,
+                              email: usernameController.text,
+                              password: passwordController.text));
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: color.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: BlocBuilder<AuthCubit, AuthState>(
+                        builder: (context, state) {
+                          if (state is RegisterAuthenticating) {
+                            return const CircularProgressIndicator(
+                                color: Colors.white);
+                          }
+                          return Text(
+                            'Daftar',
+                            style: GoogleFonts.plusJakartaSans(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  const Gap(18),
+                  // Teks Belum Punya Akun
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: InkWell(
+                      onTap: () => Navigator.pushNamed(context, loginPage),
+                      child: RichText(
+                        text: TextSpan(
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: 'Sudah Punya Akun? ',
+                              style: GoogleFonts.plusJakartaSans(
+                                  color: Colors.black,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            TextSpan(
+                              text: 'Masuk Di Sini',
+                              style: GoogleFonts.plusJakartaSans(
+                                  color: color.primary,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-          ),
+          ],
         ),
-        resizeToAvoidBottomInset: true,
       ),
     );
   }
 
   @override
   void dispose() {
-    nameControlller.dispose();
-    emailController.dispose();
+    nameController.dispose();
+    usernameController.dispose();
     passwordController.dispose();
     super.dispose();
   }

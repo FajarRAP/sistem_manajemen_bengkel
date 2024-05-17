@@ -6,7 +6,6 @@ import 'package:bengkel_pak_bowo/features/auth/data/repositories/auth_repositori
 import 'package:bengkel_pak_bowo/injection_container.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,8 +18,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   bool isObsecure = false;
 
-  Map<String, dynamic> credentials =
-      JwtDecoder.decode(locator<SharedPreferences>().getString('token') ?? '');
+  Map<String, dynamic> credentials = {};
 
   // Getter
   bool get getIsObsecure => isObsecure;

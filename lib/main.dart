@@ -13,14 +13,17 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dependencyInjection();
   final prefs = locator<SharedPreferences>();
+  String route = loginPage;
   final String? token = prefs.getString('token');
-  final role = JwtDecoder.decode(token ?? '');
-  runApp(MyApp(
-      route: token != null
-          ? role['role'] == 0
-              ? homePage
-              : invoicePage
-          : loginPage));
+  if (token != null) {
+    final role = JwtDecoder.decode(token);
+    if (role['role'] == 0) {
+      route = homePage;
+    } else {
+      route = invoicePage;
+    }
+  }
+  runApp(MyApp(route: route));
 }
 
 class MyApp extends StatelessWidget {

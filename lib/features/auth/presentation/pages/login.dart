@@ -1,5 +1,6 @@
 import 'package:bengkel_pak_bowo/features/auth/data/models/login_credentials.dart';
 import 'package:bengkel_pak_bowo/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:bengkel_pak_bowo/features/auth/presentation/widgets/text_field_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,11 +26,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final AuthCubit authCubit = context.read<AuthCubit>();
+    final authCubit = context.read<AuthCubit>();
     final color = Theme.of(context).colorScheme;
-    final iconPassword = !authCubit.getIsObsecure
-        ? Icon(CupertinoIcons.eye_fill, color: color.primary)
-        : Icon(CupertinoIcons.eye_slash_fill, color: color.primary);
 
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
@@ -58,8 +56,10 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           );
-          authCubit.credentials = JwtDecoder.decode(
-              locator<SharedPreferences>().getString('token') ?? '');
+          final String? token = locator<SharedPreferences>().getString('token');
+          if (token != null) {
+            authCubit.credentials = JwtDecoder.decode(token);
+          }
           switch (authCubit.getRole) {
             case 0:
               Navigator.pushNamed(context, homePage);
@@ -74,6 +74,7 @@ class _LoginPageState extends State<LoginPage> {
         body: ListView(
           padding: EdgeInsets.zero,
           children: [
+            // Seksi Atas
             Stack(
               children: [
                 Image.asset('assets/login.png'),
@@ -95,92 +96,75 @@ class _LoginPageState extends State<LoginPage> {
                   child: Text(
                     'di Bengkel Bowo!',
                     style: GoogleFonts.plusJakartaSans(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                    ),
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600),
                   ),
                 ),
               ],
             ),
+
+            // Seksi Bawah
             Container(
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(30),
-                ),
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(30)),
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                    blurRadius: 36,
-                    spreadRadius: 1,
-                    offset: const Offset(0, -5),
-                    color: Colors.black.withOpacity(.25),
-                  ),
+                      blurRadius: 36,
+                      spreadRadius: 1,
+                      offset: const Offset(0, -5),
+                      color: Colors.black.withOpacity(.25)),
                 ],
               ),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 30,
-                vertical: 20,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
               width: double.infinity,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Logo Alphaworks
                   Image.asset(
                     'assets/logo-no-bg.png',
                     scale: 2,
                   ),
+                  // Teks Login
                   Text(
                     'Login',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 40,
-                      color: color.primary,
-                    ),
+                    style: GoogleFonts.plusJakartaSans(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 40,
+                        color: color.primary),
                   ),
                   const Gap(12),
+                  // Form Validasi
                   Form(
                     key: formKey,
                     child: Column(
                       children: [
-                        TextFormField(
+                        // Form Username
+                        TextFieldAuth(
                             controller: usernameController,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              label: const Text('Username'),
-                            ),
-                            validator: authCubit.validate),
+                            isPassword: false,
+                            label: 'Username'),
                         const Gap(12),
+                        // Form Password
                         BlocBuilder<AuthCubit, AuthState>(
-                          builder: (context, state) {
-                            return TextFormField(
+                            builder: (context, state) => TextFieldAuth(
                                 controller: passwordController,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  label: const Text('Password'),
-                                  suffixIcon: IconButton(
-                                    onPressed: authCubit.obsecurePassword,
-                                    icon: iconPassword,
-                                  ),
-                                ),
-                                obscureText: !authCubit.getIsObsecure,
-                                validator: authCubit.validate);
-                          },
-                        ),
+                                isPassword: true,
+                                label: 'Password')),
                       ],
                     ),
                   ),
                   const Gap(12),
+                  // Lupa Password
                   RichText(
                     text: TextSpan(
                       children: <TextSpan>[
-                        const TextSpan(
+                        TextSpan(
                           text: 'Lupa Password? ',
-                          style: TextStyle(
+                          style: GoogleFonts.plusJakartaSans(
                             color: Colors.black,
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
@@ -188,7 +172,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         TextSpan(
                           text: 'Klik Di Sini',
-                          style: TextStyle(
+                          style: GoogleFonts.plusJakartaSans(
                             color: color.primary,
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
@@ -198,6 +182,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const Gap(36),
+                  // Button Masuk
                   SizedBox(
                     width: double.infinity,
                     height: 55,
@@ -219,14 +204,13 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: BlocBuilder<AuthCubit, AuthState>(
                         builder: (context, state) {
-                          print(state);
                           if (state is LoginAuthenticating) {
                             return const CircularProgressIndicator(
                                 color: Colors.white);
                           }
-                          return const Text(
+                          return Text(
                             'Masuk',
-                            style: TextStyle(
+                            style: GoogleFonts.plusJakartaSans(
                               color: Colors.white,
                               fontSize: 15,
                               fontWeight: FontWeight.w600,
@@ -237,30 +221,27 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const Gap(18),
+                  // Teks Belum Punya Akun
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: InkWell(
-                      onTap: () {
-                        print('register');
-                      },
+                      onTap: () => Navigator.pushNamed(context, registerPage),
                       child: RichText(
                         text: TextSpan(
                           children: <TextSpan>[
-                            const TextSpan(
+                            TextSpan(
                               text: 'Belum Punya Akun? ',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: GoogleFonts.plusJakartaSans(
+                                  color: Colors.black,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500),
                             ),
                             TextSpan(
                               text: 'Daftar Di Sini',
-                              style: TextStyle(
-                                color: color.primary,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: GoogleFonts.plusJakartaSans(
+                                  color: color.primary,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500),
                             ),
                           ],
                         ),
