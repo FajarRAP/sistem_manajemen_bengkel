@@ -1,4 +1,4 @@
-import 'package:bengkel_pak_bowo/features/admin/invoice/data/models/barang.dart';
+import 'package:bengkel_pak_bowo/features/admin/transaction/data/models/barang.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 

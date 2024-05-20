@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:bengkel_pak_bowo/features/admin/invoice/data/models/invoice.dart';
+import 'package:bengkel_pak_bowo/features/admin/transaction/data/models/invoice.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/widgets.dart';
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bengkel_pak_bowo/core/constants_finals.dart';
 import 'package:bengkel_pak_bowo/features/auth/data/models/account.dart';
 import 'package:bengkel_pak_bowo/features/auth/data/models/login_credentials.dart';
 import 'package:bengkel_pak_bowo/features/auth/data/repositories/auth_repositories_impl.dart';
@@ -9,15 +10,12 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../core/constants_finals.dart';
-
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
 
   bool isObsecure = false;
-
   Map<String, dynamic> credentials = {};
 
   // Getter
@@ -76,7 +74,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   void authLogout(BuildContext context) {
     locator<SharedPreferences>().remove('token');
-    Navigator.pushReplacementNamed(context, loginPage);
+    Navigator.pushNamedAndRemoveUntil(context, loginPage, (route) => false);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Text('Berhasil Logout',
             style: TextStyle(color: Colors.white)),

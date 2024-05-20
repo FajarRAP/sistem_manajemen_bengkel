@@ -1,29 +1,32 @@
-import 'package:bengkel_pak_bowo/core/constants_finals.dart';
-import 'package:bengkel_pak_bowo/features/admin/invoice/presentation/cubit/invoice_cubit.dart';
-import 'package:bengkel_pak_bowo/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:bengkel_pak_bowo/features/admin/home/presentation/pages/home.dart';
+import 'package:bengkel_pak_bowo/features/admin/transaction/presentation/cubit/invoice_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
+import 'package:gap/gap.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class InvoicePage extends StatelessWidget {
-  const InvoicePage({super.key});
+class TransactionPage extends StatelessWidget {
+  const TransactionPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final InvoiceCubit invoiceCubit = context.read<InvoiceCubit>();
-    final authCubit = context.read<AuthCubit>();
+    final color = Theme.of(context).colorScheme;
 
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
             SliverAppBar(
+              backgroundColor: color.primary,
               centerTitle: true,
-              leading: IconButton(
-                onPressed: () => authCubit.authLogout(context),
-                icon: const Icon(Icons.logout),
+              title: Text(
+                'Riwayat Transaksi',
+                style: GoogleFonts.plusJakartaSans(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600),
               ),
-              title: const Text('Transaksi'),
             ),
           ];
         },
@@ -43,27 +46,11 @@ class InvoicePage extends StatelessWidget {
               return RefreshIndicator(
                 displacement: 10,
                 onRefresh: () async => invoiceCubit.getInvoices(),
-                child: ListView.builder(
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      onTap: () {
-                        invoiceCubit.invoice = state.data[index];
-                        Navigator.of(context).pushNamed(detailInvoicePage);
-                      },
-                      subtitle: Text(
-                        DateFormat('d-M-y HH:mm')
-                            .format(state.data[index].boughtAt),
-                      ),
-                      title: Text(state.data[index].namaPelanggan),
-                      trailing: Text(
-                        'Rp. ${state.data[index].formattedTotalHarga}',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    );
-                  },
+                child: ListView.separated(
+                  padding: const EdgeInsets.all(20),
+                  itemBuilder: (context, index) =>
+                      ItemTransaksi(invoice: state.data[index]),
+                  separatorBuilder: (context, index) => const Gap(12),
                   itemCount: state.data.length,
                 ),
               );
@@ -106,10 +93,6 @@ class InvoicePage extends StatelessWidget {
             );
           },
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.of(context).pushNamed(makeInvoicePage),
-        child: const Icon(Icons.add),
       ),
     );
   }

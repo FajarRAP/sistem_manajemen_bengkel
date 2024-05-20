@@ -1,29 +1,28 @@
 import 'package:bengkel_pak_bowo/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:bengkel_pak_bowo/features/customer/home/presentation/widgets/item_jasa.dart';
+import 'package:bengkel_pak_bowo/injection_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  final pageController = PageController();
-  int currentPage = 0;
 
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
     final authCubit = context.read<AuthCubit>();
+    final token = locator<SharedPreferences>().getString('token');
+    if (token != null) {
+      authCubit.credentials = JwtDecoder.decode(token);
+    }
 
-    final pages = [
-      Container(
+    return Scaffold(
+      body: Container(
         color: Colors.transparent,
         width: double.infinity,
         height: double.infinity,
@@ -51,7 +50,7 @@ class _HomePageState extends State<HomePage> {
                         fontWeight: FontWeight.w700),
                   ),
                   Text(
-                    authCubit.credentials['name'],
+                    authCubit.credentials['name'] ?? 'Default',
                     style: GoogleFonts.plusJakartaSans(
                         color: Colors.white,
                         fontSize: 20,
@@ -153,7 +152,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Positioned(
-              bottom: 375,
+              bottom: 400,
               left: 16,
               child: Text(
                 'Jasa Yang Ditawarkan',
@@ -163,178 +162,36 @@ class _HomePageState extends State<HomePage> {
                     fontWeight: FontWeight.w600),
               ),
             ),
-            Positioned(
-              bottom: 150,
+            const Positioned(
+              bottom: 185,
               left: 24,
               right: 24,
-              child: GridView.count(
-                crossAxisCount: 4,
-                mainAxisSpacing: 16,
-                shrinkWrap: true,
-                children: const [
-                  ItemJasa(src: 'ac.png', title: 'Service AC'),
-                  ItemJasa(src: 'cat_body.png', title: 'Cat Full Body'),
-                  ItemJasa(src: 'tune_up.png', title: 'Tune Up'),
-                  ItemJasa(src: 'kampas.png', title: 'Service Kampas'),
-                  ItemJasa(src: 'poles.png', title: 'Poles'),
-                  ItemJasa(src: 'cat_panel.png', title: 'Cat Panel'),
-                  ItemJasa(src: 'modif.png', title: 'Modifikasi'),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ItemJasa(src: 'ac.png', title: 'Service AC'),
+                      ItemJasa(src: 'cat_body.png', title: 'Cat Full Body'),
+                      ItemJasa(src: 'tune_up.png', title: 'Tune Up'),
+                      ItemJasa(src: 'kampas.png', title: 'Service Kampas'),
+                    ],
+                  ),
+                  Gap(16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ItemJasa(src: 'poles.png', title: 'Poles'),
+                      ItemJasa(src: 'cat_panel.png', title: 'Cat Panel'),
+                      ItemJasa(src: 'modif.png', title: 'Modifikasi'),
+                    ],
+                  ),
                 ],
               ),
             ),
           ],
         ),
       ),
-      Container(
-        color: Colors.transparent,
-        width: double.infinity,
-        height: double.infinity,
-        child: Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.vertical(
-                  bottom: Radius.circular(40),
-                ),
-                color: color.primary,
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              width: double.infinity,
-              height: 230,
-              child: Align(
-                alignment: const Alignment(0, -.6),
-                child: Text(
-                  'Daftar Transaksi',
-                  style: GoogleFonts.plusJakartaSans(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-      Center(
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 7,
-                spreadRadius: 1,
-                color: Colors.black.withOpacity(.25),
-              ),
-            ],
-            color: Colors.white,
-          ),
-          margin: const EdgeInsets.symmetric(horizontal: 30),
-          padding: const EdgeInsets.all(30),
-          width: double.infinity,
-          height: 640,
-          child: Column(
-            children: [
-              Text(
-                'Profil',
-                style: GoogleFonts.plusJakartaSans(
-                    fontSize: 20, fontWeight: FontWeight.w600),
-              ),
-              Text(
-                authCubit.credentials['name'],
-                style: GoogleFonts.plusJakartaSans(
-                    fontSize: 20, fontWeight: FontWeight.w600),
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => authCubit.authLogout(context),
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: color.primary,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8))),
-                  child: Text(
-                    'Logout',
-                    style: GoogleFonts.plusJakartaSans(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ];
-
-    return Scaffold(
-      body: PageView(
-        controller: pageController,
-        onPageChanged: (value) => setState(() => currentPage = value),
-        children: pages,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 10,
-              spreadRadius: 0,
-              offset: const Offset(0, 2),
-              color: Colors.black.withOpacity(.25),
-            ),
-          ],
-        ),
-        width: double.infinity,
-        margin: const EdgeInsets.symmetric(horizontal: 40),
-        height: 60,
-        child: NavigationBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          selectedIndex: currentPage,
-          destinations: [
-            NavigationDestination(
-              icon: const Icon(Icons.home),
-              label: 'Utama',
-              selectedIcon: Icon(
-                Icons.home,
-                color: color.primary,
-                size: 28,
-              ),
-            ),
-            NavigationDestination(
-              icon: const Icon(CupertinoIcons.news_solid),
-              label: 'Transaksi',
-              selectedIcon: Icon(
-                CupertinoIcons.news_solid,
-                color: color.primary,
-                size: 28,
-              ),
-            ),
-            NavigationDestination(
-              icon: const Icon(Icons.person),
-              label: 'Profil',
-              selectedIcon: Icon(
-                Icons.person,
-                color: color.primary,
-                size: 28,
-              ),
-            ),
-          ],
-          onDestinationSelected: (value) {
-            pageController.jumpToPage(value);
-            setState(() => currentPage = value);
-          },
-        ),
-      ),
     );
   }
-  @override
-  void dispose() {
-    pageController.dispose();
-    super.dispose();
-  }
 }
-

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:bengkel_pak_bowo/features/admin/invoice/data/models/barang.dart';
+import 'package:bengkel_pak_bowo/features/admin/transaction/data/models/barang.dart';
 import 'package:intl/intl.dart';
 
 List<InvoiceModel> invoiceFromJson(String str) => List<InvoiceModel>.from(
@@ -18,6 +18,8 @@ class InvoiceModel {
       0, (previousValue, element) => previousValue + element.harga);
   String get formattedTotalHarga =>
       NumberFormat('###,###').format(getTotalHarga);
+  String get getDate => DateFormat('d MMMM y').format(boughtAt);
+  String get getTime => DateFormat('HH:mm').format(boughtAt);
 
   InvoiceModel({
     required this.namaPelanggan,

@@ -5,11 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/constants_finals.dart';
-import '../../../../injection_container.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});

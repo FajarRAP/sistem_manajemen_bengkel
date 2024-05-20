@@ -60,14 +60,7 @@ class _LoginPageState extends State<LoginPage> {
           if (token != null) {
             authCubit.credentials = JwtDecoder.decode(token);
           }
-          switch (authCubit.getRole) {
-            case 0:
-              Navigator.pushNamed(context, homePage);
-              break;
-            case 1:
-              Navigator.pushNamed(context, invoicePage);
-            default:
-          }
+          Navigator.pushNamed(context, homePage);
         }
       },
       child: Scaffold(
