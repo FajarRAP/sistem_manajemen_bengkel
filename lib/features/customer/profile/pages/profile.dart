@@ -1,7 +1,10 @@
-import 'package:bengkel_pak_bowo/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../../auth/presentation/cubit/auth_cubit.dart';
+import '../widgets/line_chart.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -10,49 +13,81 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final authCubit = context.read<AuthCubit>();
     final color = Theme.of(context).colorScheme;
-    
-    return Center(
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 7,
-              spreadRadius: 1,
-              color: Colors.black.withOpacity(.25),
-            ),
-          ],
-          color: Colors.white,
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: color.primary,
+        leading: const SizedBox(),
+        leadingWidth: 0,
+        title: Align(
+          alignment: Alignment.center,
+          child: Column(
+            children: [
+              Text(
+                'Profile',
+                style: GoogleFonts.plusJakartaSans(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600),
+              ),
+              const Gap(18),
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(30)),
+                margin: const EdgeInsets.symmetric(horizontal: 40),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 26, vertical: 13),
+                width: double.infinity,
+                child: Text(
+                  authCubit.credentials['name'],
+                  style: GoogleFonts.plusJakartaSans(
+                      fontSize: 18, fontWeight: FontWeight.w600),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          ),
         ),
-        margin: const EdgeInsets.symmetric(horizontal: 30),
-        padding: const EdgeInsets.all(30),
-        width: double.infinity,
-        height: 640,
+        toolbarHeight: 150,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
           children: [
-            Text(
-              'Profil',
-              style: GoogleFonts.plusJakartaSans(
-                  fontSize: 20, fontWeight: FontWeight.w600),
+            const Gap(48),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 7,
+                    spreadRadius: 1,
+                    color: Colors.black.withOpacity(.25),
+                  ),
+                ],
+                color: Colors.white,
+              ),
+              padding: const EdgeInsets.all(12),
+              width: double.infinity,
+              height: 450,
+              child: LineChartSample2(),
             ),
-            Text(
-              authCubit.credentials['name'],
-              style: GoogleFonts.plusJakartaSans(
-                  fontSize: 20, fontWeight: FontWeight.w600),
-            ),
+            const Gap(40),
             SizedBox(
+              height: 45,
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () => authCubit.authLogout(context),
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: color.primary,
+                    backgroundColor: const Color(0xFFFA0C0C),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8))),
+                        borderRadius: BorderRadius.circular(10))),
                 child: Text(
                   'Logout',
                   style: GoogleFonts.plusJakartaSans(
                       color: Colors.white,
-                      fontSize: 15,
+                      fontSize: 18,
                       fontWeight: FontWeight.w600),
                 ),
               ),

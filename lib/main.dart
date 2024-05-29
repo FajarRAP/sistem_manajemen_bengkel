@@ -1,9 +1,10 @@
-import 'package:bengkel_pak_bowo/core/constants_finals.dart';
-import 'package:bengkel_pak_bowo/core/routes.dart';
-import 'package:bengkel_pak_bowo/features/admin/transaction/presentation/cubit/barang_cubit.dart';
-import 'package:bengkel_pak_bowo/features/admin/transaction/presentation/cubit/invoice_cubit.dart';
-import 'package:bengkel_pak_bowo/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:bengkel_pak_bowo/injection_container.dart';
+import 'core/constants_finals.dart';
+import 'core/routes.dart';
+import 'features/admin/transaction/presentation/cubit/barang_cubit.dart';
+import 'features/admin/transaction/presentation/cubit/invoice_cubit.dart';
+import 'features/auth/presentation/cubit/auth_cubit.dart';
+import 'features/customer/home/presentation/cubit/queue_cubit.dart';
+import 'injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => InvoiceCubit()),
         BlocProvider(create: (context) => BarangCubit()),
         BlocProvider(create: (context) => AuthCubit()),
+        BlocProvider(create: (context) => QueueCubit()),
       ],
       child: MaterialApp(
         title: 'Bengkel Pak Bowo',

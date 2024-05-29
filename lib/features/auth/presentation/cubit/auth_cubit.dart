@@ -1,14 +1,15 @@
 import 'dart:convert';
 
-import 'package:bengkel_pak_bowo/core/constants_finals.dart';
-import 'package:bengkel_pak_bowo/features/auth/data/models/account.dart';
-import 'package:bengkel_pak_bowo/features/auth/data/models/login_credentials.dart';
-import 'package:bengkel_pak_bowo/features/auth/data/repositories/auth_repositories_impl.dart';
-import 'package:bengkel_pak_bowo/injection_container.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../../core/constants_finals.dart';
+import '../../../../injection_container.dart';
+import '../../data/models/login.dart';
+import '../../data/models/user.dart';
+import '../../domain/usecases/auth_login.dart';
+import '../../domain/usecases/auth_register.dart';
 
 part 'auth_state.dart';
 
@@ -21,21 +22,26 @@ class AuthCubit extends Cubit<AuthState> {
   // Getter
   bool get getIsObsecure => isObsecure;
   int get getRole => credentials['role'];
+  String get getName => credentials['name'];
+  String get getUsername => credentials['username'];
+  LoginModel loginData(final String username, final String password) =>
+      LoginModel(username: username, password: password);
+  UserModel accountData(
+          final String name, final String username, final String password) =>
+      UserModel(name: name, username: username, password: password);
 
   void obsecurePassword() {
     isObsecure = !isObsecure;
     emit(ObsecurePassword());
   }
 
-  Future<void> authLogin(final LoginCredentials data) async {
+  Future<void> authLogin(final LoginModel data) async {
     emit(LoginAuthenticating());
-    final result =
-        await locator<AuthRepositoriesImpl>().authLogin(loginToJson(data));
+
+    final result = await locator<AuthLoginUseCase>().execute(data);
 
     result.fold(
-      (failure) {
-        emit(LoginError(failure.message));
-      },
+      (failure) => emit(LoginError(failure.message)),
       (success) async {
         final Map<String, dynamic> responseDecoded = jsonDecode(success);
 
@@ -50,23 +56,20 @@ class AuthCubit extends Cubit<AuthState> {
     );
   }
 
-  Future<void> authRegister(final AccountModel account) async {
+  Future<void> authRegister(final UserModel user) async {
     emit(RegisterAuthenticating());
 
-    final result = await locator<AuthRepositoriesImpl>()
-        .authRegister(accountToJson(account));
+    final result = await locator<AuthRegisterUseCase>().execute(user);
 
     result.fold(
-      (failure) {
-        emit(RegisterError(failure.message));
-      },
+      (failure) => emit(RegisterError(failure.message)),
       (success) {
         final Map<String, dynamic> responseDecoded = jsonDecode(success);
 
         if (responseDecoded['statusCode'] == 201) {
           emit(RegisterAuthenticated(responseDecoded['message']));
         } else {
-          emit(RegisterError(responseDecoded['message']));
+          emit(RegisterError((responseDecoded['message'] as List).join('\n')));
         }
       },
     );

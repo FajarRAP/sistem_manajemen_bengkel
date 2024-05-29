@@ -1,6 +1,7 @@
-import 'package:bengkel_pak_bowo/features/admin/transaction/data/models/barang.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+
+import '../../data/models/barang.dart';
 
 part 'barang_state.dart';
 

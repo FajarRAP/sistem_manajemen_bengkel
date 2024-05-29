@@ -1,5 +1,6 @@
-import 'package:bengkel_pak_bowo/core/failure.dart';
 import 'package:dartz/dartz.dart';
+
+import '../../../../../core/failure.dart';
 
 abstract class InvoiceRepositories<T> {
   Future<Either<Failure, T>> getInvoices(Map<String, String> headers);

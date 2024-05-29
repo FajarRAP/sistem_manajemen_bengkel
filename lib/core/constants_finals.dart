@@ -1,12 +1,16 @@
-import 'package:bengkel_pak_bowo/features/admin/transaction/data/models/barang.dart';
+import '../features/admin/transaction/data/models/barang.dart';
 
 // API
-const String url = 'https://bengkel-pak-bowo-services.vercel.app/';
-// const String url = 'http://10.0.2.2:3001/';
+// const String url = 'https://bengkel-pak-bowo-services.vercel.app/';
+const String url = 'http://10.0.2.2:3001/';
+
 final Map<String, String> endpoint = {
   'invoice': 'invoice',
   'login': 'login',
   'register': 'register',
+  'queue': 'queue',
+  'queueNum': 'queueNum',
+  'queueMe': 'queueMe'
 };
 final Map<String, String> headers = {
   'Content-Type': 'application/json',
@@ -21,6 +25,7 @@ const String makeInvoicePage = '${invoicePage}make/';
 const String detailInvoicePage = '${invoicePage}detail/';
 const String previewInvoicePage = '${invoicePage}preview/';
 const String homePage = '${initialRoute}home/';
+const String queuePage = '${initialRoute}detailAntrian/';
 
 final List<ServiceModel> items = [
   ServiceModel(nama: 'Cat Full Body', harga: 12000000),

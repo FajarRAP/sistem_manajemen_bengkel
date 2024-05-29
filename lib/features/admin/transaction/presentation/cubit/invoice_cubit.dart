@@ -1,9 +1,10 @@
 import 'dart:convert';
 
-import 'package:bengkel_pak_bowo/features/admin/transaction/data/models/barang.dart';
-import 'package:bengkel_pak_bowo/features/admin/transaction/data/models/invoice.dart';
-import 'package:bengkel_pak_bowo/features/admin/transaction/data/repositories/invoice_repositories_impl.dart';
-import 'package:bengkel_pak_bowo/injection_container.dart';
+import '../../../../../core/constants_finals.dart';
+import '../../data/models/barang.dart';
+import '../../data/models/invoice.dart';
+import '../../data/repositories/invoice_repositories_impl.dart';
+import '../../../../../injection_container.dart';
 import 'package:bloc/bloc.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:meta/meta.dart';
@@ -54,9 +55,9 @@ class InvoiceCubit extends Cubit<InvoiceState> {
   Future<void> createInvoice(final InvoiceModel invoice) async {
     emit(InvoiceCreating());
 
-    final Map<String, String> headers = {
-      'Authorization': locator<SharedPreferences>().getString('token') ?? ''
-    };
+    headers['Authorization'] =
+        locator<SharedPreferences>().getString('token') ?? '';
+
     final results = await locator<InvoiceRepositoriesImpl>()
         .createInvoices(headers, invoiceToJson(invoice));
 
@@ -70,6 +71,7 @@ class InvoiceCubit extends Cubit<InvoiceState> {
             emit(InvoiceCreated(jsonDecode(response)['message']));
             break;
           case 400:
+          case 403:
             emit(InvoiceErrorCreated(jsonDecode(response)['message']));
             break;
         }

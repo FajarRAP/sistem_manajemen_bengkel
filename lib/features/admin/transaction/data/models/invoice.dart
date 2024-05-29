@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:bengkel_pak_bowo/features/admin/transaction/data/models/barang.dart';
+import 'barang.dart';
 import 'package:intl/intl.dart';
 
 List<InvoiceModel> invoiceFromJson(String str) => List<InvoiceModel>.from(

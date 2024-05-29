@@ -1,19 +1,21 @@
-import 'package:bengkel_pak_bowo/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../cubit/auth_cubit.dart';
+
 class TextFieldAuth extends StatelessWidget {
   const TextFieldAuth({
     super.key,
     required this.controller,
-    required this.isPassword,
     required this.label,
+    this.isPassword = false,
   });
 
   final TextEditingController controller;
-  final bool isPassword;
   final String label;
+  final bool isPassword;
 
   @override
   Widget build(BuildContext context) {

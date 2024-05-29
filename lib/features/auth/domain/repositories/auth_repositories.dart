@@ -1,7 +1,9 @@
-import 'package:bengkel_pak_bowo/core/failure.dart';
 import 'package:dartz/dartz.dart';
 
-abstract class AuthRepositories<T> {
-  Future<Either<Failure, T>> authRegister(final String body);
-  Future<Either<Failure, T>> authLogin(final String body);
+import '../../../../core/failure.dart';
+import '../entities/user.dart';
+
+abstract class AuthRepositories {
+  Future<Either<Failure, String>> authRegister(final User data);
+  Future<Either<Failure, String>> authLogin(final User data);
 }

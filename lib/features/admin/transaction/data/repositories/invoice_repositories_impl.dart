@@ -1,7 +1,7 @@
-import 'package:bengkel_pak_bowo/core/failure.dart';
-import 'package:bengkel_pak_bowo/features/admin/transaction/data/data_sources/remote.dart';
-import 'package:bengkel_pak_bowo/features/admin/transaction/data/models/invoice.dart';
-import 'package:bengkel_pak_bowo/features/admin/transaction/domain/repositories/invoice_repositories.dart';
+import '../../../../../core/failure.dart';
+import '../data_sources/remote.dart';
+import '../models/invoice.dart';
+import '../../domain/repositories/invoice_repositories.dart';
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart';
 
@@ -34,6 +34,7 @@ class InvoiceRepositoriesImpl implements InvoiceRepositories {
       switch (response.statusCode) {
         case 201:
         case 400:
+        case 403:
           return Right(response.body);
       }
       return Left(Failure());

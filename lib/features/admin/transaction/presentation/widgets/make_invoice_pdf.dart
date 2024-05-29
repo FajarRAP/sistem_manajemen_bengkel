@@ -1,8 +1,9 @@
 import 'dart:typed_data';
 
-import 'package:bengkel_pak_bowo/features/admin/transaction/data/models/invoice.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/widgets.dart';
+
+import '../../data/models/invoice.dart';
 
 Future<Uint8List> makePDF(final InvoiceModel invoice) async {
   final Document pdf = Document();
