@@ -1,4 +1,7 @@
-import '../features/admin/transaction/data/models/barang.dart';
+import 'package:bengkel_pak_bowo/injection_container.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../features/invoice/data/models/barang.dart';
 
 // API
 // const String url = 'https://bengkel-pak-bowo-services.vercel.app/';
@@ -14,6 +17,7 @@ final Map<String, String> endpoint = {
 };
 final Map<String, String> headers = {
   'Content-Type': 'application/json',
+  'Authorization': locator<SharedPreferences>().getString('token') ?? '',
 };
 
 // route name

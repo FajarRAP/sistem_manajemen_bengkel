@@ -1,9 +1,9 @@
 import 'core/constants_finals.dart';
 import 'core/routes.dart';
-import 'features/admin/transaction/presentation/cubit/barang_cubit.dart';
-import 'features/admin/transaction/presentation/cubit/invoice_cubit.dart';
+import 'features/invoice/presentation/cubit/barang_cubit.dart';
+import 'features/invoice/presentation/cubit/invoice_cubit.dart';
 import 'features/auth/presentation/cubit/auth_cubit.dart';
-import 'features/customer/home/presentation/cubit/queue_cubit.dart';
+import 'features/queue/presentation/cubit/queue_cubit.dart';
 import 'injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(
             seedColor: const Color(0xFF375DFF),
             secondary: const Color(0xFFFFEE00),
+            outline: const Color(0xFF6C6C6C),
           ),
           useMaterial3: true,
         ),

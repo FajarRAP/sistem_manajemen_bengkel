@@ -1,15 +1,15 @@
-import 'package:bengkel_pak_bowo/features/admin/home/presentation/pages/home.dart'
+import 'package:bengkel_pak_bowo/features/admin/home.dart'
     as admin;
-import 'package:bengkel_pak_bowo/features/admin/transaction/presentation/pages/transaction.dart'
+import 'package:bengkel_pak_bowo/features/invoice/presentation/pages/transaction.dart'
     as admin;
-import 'package:bengkel_pak_bowo/features/admin/profile/pages/profile.dart'
+import 'package:bengkel_pak_bowo/features/admin/profile.dart'
     as admin;
 import 'package:bengkel_pak_bowo/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:bengkel_pak_bowo/features/customer/home/presentation/pages/home.dart'
+import 'package:bengkel_pak_bowo/features/customer/home.dart'
     as cust;
-import 'package:bengkel_pak_bowo/features/customer/profile/pages/profile.dart'
+import 'package:bengkel_pak_bowo/features/customer/profile.dart'
     as cust;
-import 'package:bengkel_pak_bowo/features/customer/transaction/pages/transaction.dart'
+import 'package:bengkel_pak_bowo/features/customer/transaction.dart'
     as cust;
 import 'package:bengkel_pak_bowo/injection_container.dart';
 import 'package:flutter/cupertino.dart';
@@ -70,7 +70,7 @@ class _FragmentPageState extends State<FragmentPage> {
       ),
       NavigationDestination(
         icon: const Icon(Icons.person),
-        label: 'Profil',
+        label: 'Profile',
         selectedIcon: Icon(
           Icons.person,
           color: color.primary,

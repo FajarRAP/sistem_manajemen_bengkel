@@ -1,12 +1,12 @@
-import 'package:bengkel_pak_bowo/queue/data/data_sources/remote.dart';
-import 'package:bengkel_pak_bowo/queue/data/repositories/queue_repositories_impl.dart';
-import 'package:bengkel_pak_bowo/queue/domain/usecases/get_my_queue_today_use_case.dart';
-import 'package:bengkel_pak_bowo/queue/domain/usecases/get_queue_num_today_use_case.dart';
-import 'package:bengkel_pak_bowo/queue/domain/usecases/get_queue_today_use_case.dart';
-import 'package:bengkel_pak_bowo/queue/domain/usecases/pick_queue_use_case.dart';
+import 'package:bengkel_pak_bowo/features/queue/data/data_sources/remote.dart';
+import 'package:bengkel_pak_bowo/features/queue/data/repositories/queue_repositories_impl.dart';
+import 'package:bengkel_pak_bowo/features/queue/domain/usecases/get_my_queue_today_use_case.dart';
+import 'package:bengkel_pak_bowo/features/queue/domain/usecases/get_queue_num_today_use_case.dart';
+import 'package:bengkel_pak_bowo/features/queue/domain/usecases/get_queue_today_use_case.dart';
+import 'package:bengkel_pak_bowo/features/queue/domain/usecases/pick_queue_use_case.dart';
 
-import 'features/admin/transaction/data/data_sources/remote.dart';
-import 'features/admin/transaction/data/repositories/invoice_repositories_impl.dart';
+import 'features/invoice/data/data_sources/remote.dart';
+import 'features/invoice/data/repositories/invoice_repositories_impl.dart';
 import 'features/auth/data/data_sources/remote.dart';
 import 'features/auth/data/repositories/auth_repositories_impl.dart';
 import 'package:get_it/get_it.dart';

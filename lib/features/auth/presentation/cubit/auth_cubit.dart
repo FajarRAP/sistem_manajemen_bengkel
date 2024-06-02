@@ -66,10 +66,18 @@ class AuthCubit extends Cubit<AuthState> {
       (success) {
         final Map<String, dynamic> responseDecoded = jsonDecode(success);
 
-        if (responseDecoded['statusCode'] == 201) {
-          emit(RegisterAuthenticated(responseDecoded['message']));
-        } else {
-          emit(RegisterError((responseDecoded['message'] as List).join('\n')));
+        switch (responseDecoded['statusCode']) {
+          case 201:
+            emit(RegisterAuthenticated(responseDecoded['message']));
+            break;
+          case 400:
+            emit(
+                RegisterError((responseDecoded['message'] as List).join('\n')));
+            break;
+          case 409:
+            emit(RegisterError(responseDecoded['message']));
+            break;
+          default:
         }
       },
     );
