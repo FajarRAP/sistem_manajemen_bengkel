@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/constants_finals.dart';
-import '../../injection_container.dart';
 import '../auth/presentation/cubit/auth_cubit.dart';
 import '../queue/presentation/cubit/queue_cubit.dart';
 import 'widgets/item_queue.dart';
@@ -17,11 +14,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authCubit = context.read<AuthCubit>();
+    final queueCubit = context.read<QueueCubit>();
     final color = Theme.of(context).colorScheme;
-    final token = locator<SharedPreferences>().getString('token');
-    if (token != null) {
-      authCubit.credentials = JwtDecoder.decode(token);
-    }
 
     return Scaffold(
       body: Container(
@@ -156,6 +150,7 @@ class HomePage extends StatelessWidget {
                   height: 375,
                   child: BlocBuilder<QueueCubit, QueueState>(
                     bloc: context.read<QueueCubit>()..getQueueToday(),
+                    buildWhen: (previous, current) => current is QueueToday,
                     builder: (context, state) {
                       if (state is QueueTodayLoading) {
                         return const Center(child: CircularProgressIndicator());
@@ -163,8 +158,10 @@ class HomePage extends StatelessWidget {
                       if (state is QueueTodayLoaded) {
                         return ListView.separated(
                           padding: EdgeInsets.zero,
-                          itemBuilder: (context, index) =>
-                              ItemQueue(queue: state.datas[index]),
+                          itemBuilder: (context, index) {
+                            queueCubit.queueIndex = index;
+                            return ItemQueue(queue: state.datas[index]);
+                          },
                           separatorBuilder: (context, index) => const Gap(12),
                           itemCount: state.datas.length,
                         );

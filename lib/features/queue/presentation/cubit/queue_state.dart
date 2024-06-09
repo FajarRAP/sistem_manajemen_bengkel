@@ -5,9 +5,13 @@ sealed class QueueState {}
 
 final class QueueInitial extends QueueState {}
 
+class PickQueue extends QueueState {}
+
 class MyQueueToday extends QueueState {}
 
 class QueueNumToday extends QueueState {}
+
+class QueueToday extends QueueState {}
 
 class QueueNumTodayLoaded extends QueueNumToday {
   final int queueNum;
@@ -20,35 +24,42 @@ class QueueNumTodayError extends QueueNumToday {
   QueueNumTodayError(this.message);
 }
 
-class QueueTodayLoading extends QueueState {}
+class QueueTodayLoading extends QueueToday {}
 
-class QueueTodayLoaded extends QueueState {
+class QueueTodayLoaded extends QueueToday {
   final List<QueueEntity> datas;
   QueueTodayLoaded(this.datas);
 }
 
-class QueueTodayError extends QueueState {
+class QueueTodayError extends QueueToday {
   final String message;
   QueueTodayError(this.message);
 }
 
-class PickQueueLoading extends QueueState {}
+class PickQueueLoading extends PickQueue {}
 
-class PickQueueSuccess extends QueueState {
+class PickQueueSuccess extends PickQueue {
   final String message;
 
   PickQueueSuccess(this.message);
 }
 
-class PickQueueError extends QueueState {
+class PickQueueError extends PickQueue {
   final String message;
+
   PickQueueError(this.message);
 }
 
-class QueueNotAccepted extends QueueState {}
+class QueueNotAccepted extends PickQueue {}
 
 class MyQueueTodayLoaded extends MyQueueToday {
   final QueueEntity data;
 
   MyQueueTodayLoaded(this.data);
+}
+
+class MyQueueTodayError extends MyQueueToday {
+  final String message;
+
+  MyQueueTodayError(this.message);
 }

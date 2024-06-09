@@ -2,10 +2,7 @@ import 'package:bengkel_pak_bowo/features/queue/domain/usecases/get_my_queue_tod
 import 'package:bengkel_pak_bowo/features/queue/domain/usecases/pick_queue_use_case.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../core/constants_finals.dart';
-import '../../../../injection_container.dart';
 import '../../domain/entities/queue_entity.dart';
 import '../../domain/usecases/get_queue_num_today_use_case.dart';
 import '../../domain/usecases/get_queue_today_use_case.dart';
@@ -13,42 +10,39 @@ import '../../domain/usecases/get_queue_today_use_case.dart';
 part 'queue_state.dart';
 
 class QueueCubit extends Cubit<QueueState> {
-  QueueCubit() : super(QueueInitial());
+  QueueCubit({
+    required this.getQueueNumTodayUseCase,
+    required this.pickQueueUseCase,
+    required this.getMyQueueTodayUseCase,
+    required this.getQueueTodayUseCase,
+  }) : super(QueueInitial());
 
-  QueueEntity? queue;
+  final GetQueueNumTodayUseCase getQueueNumTodayUseCase;
+  final PickQueueUseCase pickQueueUseCase;
+  final GetMyQueueTodayUseCase getMyQueueTodayUseCase;
+  final GetQueueTodayUseCase getQueueTodayUseCase;
 
+  int queueIndex = -1;
+
+  // User
   Future<void> getQueueNumToday() async {
-    final result = await locator<GetQueueNumTodayUseCase>().execute();
+    final result = await getQueueNumTodayUseCase();
+
     result.fold(
-      (l) => emit(QueueNumTodayError(l.message)),
-      (r) => emit(QueueNumTodayLoaded(r)),
+      (failure) => emit(QueueNumTodayError(failure.message)),
+      (success) => emit(QueueNumTodayLoaded(success)),
     );
   }
 
-  Future<void> getQueueToday() async {
-    emit(QueueTodayLoading());
-
-    final result = await locator<GetQueueTodayUseCase>().execute();
-
-    result.fold(
-      (l) => emit(QueueTodayError(l.message)),
-      (r) => emit(QueueTodayLoaded(r)),
-    );
-  }
-
-  Future<void> pickQueue(final String username) async {
+  Future<void> pickQueue(final PickQueueParams pickQueueParams) async {
     emit(PickQueueLoading());
 
-    final token = locator<SharedPreferences>().getString('token');
-    final Map<String, String> newHeaders = headers;
-    newHeaders['Authorization'] = token ?? '';
-    final result =
-        await locator<PickQueueUseCase>().execute(newHeaders, username);
+    final result = await pickQueueUseCase(pickQueueParams);
 
     result.fold(
-      (l) => emit(PickQueueError(l.message)),
-      (r) {
-        final Map<String, dynamic> responseDecoded = r;
+      (failure) => emit(PickQueueError(failure.message)),
+      (success) {
+        final Map<String, dynamic> responseDecoded = success;
         switch (responseDecoded['statusCode']) {
           case 201:
             emit(PickQueueSuccess(responseDecoded['message']));
@@ -56,20 +50,32 @@ class QueueCubit extends Cubit<QueueState> {
           case 400:
             emit(QueueNotAccepted());
             break;
+          case 403:
+            emit(PickQueueError(responseDecoded['message']));
           default:
         }
-        print(r);
       },
     );
   }
 
   Future<void> getMyQueueToday(final String username) async {
-    final token = locator<SharedPreferences>().getString('token');
-    final Map<String, String> newHeaders = headers;
-    newHeaders['Authorization'] = token ?? '';
-    final result =
-        await locator<GetMyQueueTodayUseCase>().execute(newHeaders, username);
+    final result = await getMyQueueTodayUseCase(username);
 
-    result.fold((l) => print(l.message), (r) => emit(MyQueueTodayLoaded(r)));
+    result.fold(
+      (failure) => emit(MyQueueTodayError(failure.message)),
+      (success) => emit(MyQueueTodayLoaded(success)),
+    );
+  }
+
+  // Admin
+  Future<void> getQueueToday() async {
+    emit(QueueTodayLoading());
+
+    final result = await getQueueTodayUseCase();
+
+    result.fold(
+      (failure) => emit(QueueTodayError(failure.message)),
+      (success) => emit(QueueTodayLoaded(success)),
+    );
   }
 }

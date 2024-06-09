@@ -1,13 +1,13 @@
+import 'package:bengkel_pak_bowo/core/common/widgets/snackbar_error.dart';
+import 'package:bengkel_pak_bowo/core/common/widgets/snackbar_success.dart';
+import 'package:bengkel_pak_bowo/features/queue/domain/usecases/pick_queue_use_case.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/constants_finals.dart';
-import '../../injection_container.dart';
 import '../auth/presentation/cubit/auth_cubit.dart';
 import '../queue/presentation/cubit/queue_cubit.dart';
 import 'widgets/item_jasa.dart';
@@ -20,35 +20,14 @@ class HomePage extends StatelessWidget {
     final authCubit = context.read<AuthCubit>();
     final queueCubit = context.read<QueueCubit>();
     final color = Theme.of(context).colorScheme;
-    final token = locator<SharedPreferences>().getString('token');
-    if (token != null) {
-      authCubit.credentials = JwtDecoder.decode(token);
-    }
 
     return BlocListener<QueueCubit, QueueState>(
       listener: (context, state) {
         if (state is PickQueueError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.red,
-              content: Text(
-                state.message,
-                style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w500),
-              ),
-            ),
-          );
+          errorSnackBar(context, state.message);
         }
         if (state is PickQueueSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.green,
-              content: Text(
-                state.message,
-                style: GoogleFonts.plusJakartaSans(
-                    color: Colors.black, fontWeight: FontWeight.w500),
-              ),
-            ),
-          );
+          successSnackBar(context, state.message);
         }
         if (state is QueueNotAccepted) {
           queueCubit.getMyQueueToday(authCubit.getUsername);
@@ -129,8 +108,8 @@ class HomePage extends StatelessWidget {
                         ),
                         const Gap(12),
                         InkWell(
-                          onTap: () =>
-                              queueCubit.pickQueue(authCubit.getUsername),
+                          onTap: () => queueCubit.pickQueue(PickQueueParams(
+                              authCubit.getUsername, authCubit.getName)),
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
@@ -140,6 +119,8 @@ class HomePage extends StatelessWidget {
                             width: double.infinity,
                             height: 50,
                             child: BlocBuilder<QueueCubit, QueueState>(
+                              buildWhen: (previous, current) =>
+                                  current is PickQueue,
                               builder: (context, state) {
                                 if (state is PickQueueLoading) {
                                   return const Center(
@@ -203,10 +184,6 @@ class HomePage extends StatelessWidget {
                                               fontSize: 20,
                                               fontWeight: FontWeight.w800),
                                         );
-                                      }
-                                      if (state is QueueNumTodayError) {
-                                        print(state.message);
-                                        return Text('...');
                                       }
                                       return Text(
                                         '...',

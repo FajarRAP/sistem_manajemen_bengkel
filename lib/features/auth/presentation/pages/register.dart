@@ -1,3 +1,5 @@
+import 'package:bengkel_pak_bowo/core/common/widgets/snackbar_error.dart';
+import 'package:bengkel_pak_bowo/core/common/widgets/snackbar_success.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -30,30 +32,11 @@ class _RegisterPageState extends State<RegisterPage> {
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is RegisterError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.red,
-              content: Text(
-                state.message,
-                style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w500),
-              ),
-            ),
-          );
+          errorSnackBar(context, state.message);
         }
 
         if (state is RegisterAuthenticated) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.green.shade200,
-              content: Text(
-                state.message,
-                style: GoogleFonts.plusJakartaSans(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          );
+          successSnackBar(context, state.message);
         }
       },
       child: Scaffold(

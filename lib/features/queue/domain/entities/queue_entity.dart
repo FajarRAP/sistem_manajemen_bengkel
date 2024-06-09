@@ -6,11 +6,13 @@ class QueueEntity {
 
   final int queueNum;
   final String username;
+  final String name;
   final DateTime issuedAt;
 
   QueueEntity({
     required this.queueNum,
     required this.username,
+    required this.name,
     required this.issuedAt,
   });
 }

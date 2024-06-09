@@ -1,13 +1,15 @@
-import '../repositories/auth_repositories.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/failure.dart';
+import '../../../../core/usecase/usecase_params.dart';
 import '../entities/user.dart';
+import '../repositories/auth_repositories.dart';
 
-class AuthRegisterUseCase {
+class AuthRegisterUseCase implements UseCaseParams<String, User> {
   final AuthRepositories authRepo;
   AuthRegisterUseCase(this.authRepo);
 
-  Future<Either<Failure, String>> execute(final User data) async =>
-      await authRepo.authRegister(data);
+  @override
+  Future<Either<Failure, String>> call(final User data) async =>
+      authRepo.authRegister(data);
 }

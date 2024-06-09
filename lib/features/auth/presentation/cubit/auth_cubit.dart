@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bengkel_pak_bowo/features/auth/domain/entities/user.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,7 +15,13 @@ import '../../domain/usecases/auth_register.dart';
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  AuthCubit() : super(AuthInitial());
+  AuthCubit({
+    required this.authLoginUseCase,
+    required this.authRegisterUseCase,
+  }) : super(AuthInitial());
+
+  final AuthLoginUseCase authLoginUseCase;
+  final AuthRegisterUseCase authRegisterUseCase;
 
   bool isObsecure = false;
   Map<String, dynamic> credentials = {};
@@ -35,10 +42,10 @@ class AuthCubit extends Cubit<AuthState> {
     emit(ObsecurePassword());
   }
 
-  Future<void> authLogin(final LoginModel data) async {
+  Future<void> authLogin(final User data) async {
     emit(LoginAuthenticating());
 
-    final result = await locator<AuthLoginUseCase>().execute(data);
+    final result = await authLoginUseCase(data);
 
     result.fold(
       (failure) => emit(LoginError(failure.message)),
@@ -48,6 +55,7 @@ class AuthCubit extends Cubit<AuthState> {
         if (responseDecoded['statusCode'] == 200) {
           final prefs = locator<SharedPreferences>();
           await prefs.setString('token', responseDecoded['token']);
+          headers['Authorization'] = responseDecoded['token'];
           emit(LoginAuthenticated(responseDecoded['message']));
         } else {
           emit(LoginError(responseDecoded['message']));
@@ -56,10 +64,10 @@ class AuthCubit extends Cubit<AuthState> {
     );
   }
 
-  Future<void> authRegister(final UserModel user) async {
+  Future<void> authRegister(final User data) async {
     emit(RegisterAuthenticating());
 
-    final result = await locator<AuthRegisterUseCase>().execute(user);
+    final result = await authRegisterUseCase(data);
 
     result.fold(
       (failure) => emit(RegisterError(failure.message)),

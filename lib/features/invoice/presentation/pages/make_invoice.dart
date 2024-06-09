@@ -1,3 +1,6 @@
+import 'package:bengkel_pak_bowo/core/common/widgets/snackbar_error.dart';
+import 'package:bengkel_pak_bowo/core/common/widgets/snackbar_success.dart';
+import 'package:bengkel_pak_bowo/features/queue/presentation/cubit/queue_cubit.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,43 +20,21 @@ class MakeInvoicePage extends StatefulWidget {
 }
 
 class _MakeInvoicePageState extends State<MakeInvoicePage> {
-  final TextEditingController pcsController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
-    final InvoiceCubit invoiceCubit = context.read<InvoiceCubit>();
-    final BarangCubit barangCubit = context.read<BarangCubit>();
+    final barangCubit = BarangCubit();
+    final invoiceCubit = context.read<InvoiceCubit>();
+    final queueCubit = context.read<QueueCubit>();
     final color = Theme.of(context).colorScheme;
-    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
     return BlocListener<InvoiceCubit, InvoiceState>(
       bloc: invoiceCubit,
       listener: (context, state) {
         if (state is InvoiceErrorCreated) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.red.shade800,
-              content: Text(
-                state.message,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          );
+          errorSnackBar(context, state.message);
         }
         if (state is InvoiceCreated) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.green.shade800,
-              content: Text(
-                state.message,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          );
+          successSnackBar(context, state.message);
         }
       },
       child: Scaffold(
@@ -125,20 +106,48 @@ class _MakeInvoicePageState extends State<MakeInvoicePage> {
                           ),
                         ),
                         const Gap(32),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Nama Pelanggan',
-                              style: GoogleFonts.plusJakartaSans(
-                                  fontSize: 12, fontWeight: FontWeight.w500),
-                            ),
-                            Text(
-                              'd MMMM y',
-                              style: GoogleFonts.plusJakartaSans(
-                                  fontSize: 12, fontWeight: FontWeight.w500),
-                            ),
-                          ],
+                        BlocBuilder<QueueCubit, QueueState>(
+                          buildWhen: (previous, current) =>
+                              current is QueueToday,
+                          builder: (context, state) {
+                            if (state is QueueTodayLoaded) {
+                              return Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    state.datas[queueCubit.queueIndex].name,
+                                    style: GoogleFonts.plusJakartaSans(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                  Text(
+                                    state.datas[queueCubit.queueIndex].getDate,
+                                    style: GoogleFonts.plusJakartaSans(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              );
+                            }
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Nama Pelanggan',
+                                  style: GoogleFonts.plusJakartaSans(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                Text(
+                                  'd MMMM y',
+                                  style: GoogleFonts.plusJakartaSans(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            );
+                          },
                         ),
                         const Gap(18),
                         const Divider(),
@@ -197,7 +206,7 @@ class _MakeInvoicePageState extends State<MakeInvoicePage> {
                           ),
                           onChanged: (value) {
                             if (value != null) {
-                              barangCubit.addBarang = value;
+                              barangCubit.servicePicked(value);
                             }
                           },
                           validator: (value) {
@@ -214,21 +223,27 @@ class _MakeInvoicePageState extends State<MakeInvoicePage> {
                               fontWeight: FontWeight.w600),
                         ),
                         const Gap(10),
-                        Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(color: color.outline),
-                              borderRadius: BorderRadius.circular(6)),
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          width: double.infinity,
-                          height: 50,
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              barangCubit.getServices.first.formattedHarga,
-                              style: GoogleFonts.plusJakartaSans(
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          ),
+                        BlocBuilder<BarangCubit, BarangState>(
+                          bloc: barangCubit,
+                          builder: (context, state) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: color.outline),
+                                  borderRadius: BorderRadius.circular(6)),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              width: double.infinity,
+                              height: 50,
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Rp. ${barangCubit.getHarga()}',
+                                  style: GoogleFonts.plusJakartaSans(
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            );
+                          },
                         ),
                         const Gap(50),
                         Align(
@@ -258,147 +273,7 @@ class _MakeInvoicePageState extends State<MakeInvoicePage> {
             ],
           ),
         ),
-        // appBar: AppBar(
-        //   centerTitle: true,
-        //   title: const Text('Buat Invoice'),
-        // ),
-        // body: BlocBuilder<BarangCubit, BarangState>(
-        //   bloc: barangCubit..getBarang(),
-        //   builder: (context, state) {
-        //     // Barang Added
-        //     if (state is BarangLoaded) {
-        //       return Column(
-        //         crossAxisAlignment: CrossAxisAlignment.start,
-        //         children: [
-        //           ListView.builder(
-        //             padding: EdgeInsets.zero,
-        //             itemBuilder: (context, index) => ListTile(
-        //               title: Text(state.data[index].nama),
-        //               trailing: Text(
-        //                 'Rp. ${state.data[index].formattedHarga}',
-        //                 style: const TextStyle(
-        //                   fontSize: 14,
-        //                   fontWeight: FontWeight.w600,
-        //                 ),
-        //               ),
-        //             ),
-        //             itemCount: state.data.length,
-        //             shrinkWrap: true,
-        //           ),
-        //           Padding(
-        //             padding: const EdgeInsets.symmetric(horizontal: 12),
-        //             child: ElevatedButton(
-        //               onPressed: () => barangCubit.deleteAllItems(),
-        //               child: const Text('Hapus Semua Barang'),
-        //             ),
-        //           ),
-        //         ],
-        //       );
-        //     }
-
-        //     return const Center(
-        //       child: Text(
-        //         'Silakan Tambah Jasa',
-        //         style: TextStyle(
-        //           fontSize: 16,
-        //           fontWeight: FontWeight.w500,
-        //         ),
-        //       ),
-        //     );
-        //   },
-        // ),
-        // floatingActionButton: SpeedDial(
-        //   animatedIcon: AnimatedIcons.menu_close,
-        //   children: [
-        //     SpeedDialChild(
-        //       label: 'Tambah Jasa',
-        //       onTap: () async {
-        //         final String? onCancelled = await showDialog(
-        //           context: context,
-        //           builder: (context) {
-        //             return Form(
-        //               key: formKey,
-        //               child: AlertDialog(
-        //                 title: const Text('Pilih Jasa'),
-        //                 content: DropdownSearch<ServiceModel>(
-        //                   itemAsString: (item) => item.barangAsString,
-        //                   items: items,
-        //                   dropdownDecoratorProps: const DropDownDecoratorProps(
-        //                     dropdownSearchDecoration: InputDecoration(
-        //                       hintText: 'Jasa',
-        //                     ),
-        //                   ),
-        //                   popupProps: PopupProps.menu(
-        //                     showSearchBox: true,
-        //                     emptyBuilder: (context, searchEntry) =>
-        //                         const Center(
-        //                       child: Text(
-        //                         'Tidak ada Data',
-        //                         textAlign: TextAlign.center,
-        //                       ),
-        //                     ),
-        //                   ),
-        //                   onChanged: (value) {
-        //                     if (value != null) {
-        //                       barangCubit.addBarang = value;
-        //                     }
-        //                   },
-        //                   validator: (value) {
-        //                     if (value == null) {
-        //                       return 'Mohon Isi Jasa';
-        //                     }
-        //                     return null;
-        //                   },
-        //                 ),
-        //                 actions: [
-        //                   ElevatedButton(
-        //                     onPressed: () {
-        //                       if (formKey.currentState!.validate()) {
-        //                         pcsController.text = '';
-        //                         barangCubit.getBarang();
-        //                         Navigator.of(context).pop('onElevatedButton');
-        //                       }
-        //                     },
-        //                     style: ElevatedButton.styleFrom(
-        //                       shape: RoundedRectangleBorder(
-        //                         borderRadius: BorderRadius.circular(8),
-        //                       ),
-        //                     ),
-        //                     child: const Text('Pilih'),
-        //                   ),
-        //                 ],
-        //               ),
-        //             );
-        //           },
-        //         );
-        //         if (onCancelled == null) {
-        //           barangCubit.onCancelled();
-        //         }
-        //       },
-        //       child: const Icon(CupertinoIcons.cube_box_fill),
-        //     ),
-        //     SpeedDialChild(
-        //       label: 'Buat Invoice',
-        //       onTap: () async {
-        //         final InvoiceModel invoice = InvoiceModel(
-        //           namaPelanggan: 'Soleh',
-        //           services: barangCubit.getServices,
-        //           boughtAt: DateTime.now(),
-        //         );
-        //         invoiceCubit.createInvoice(invoice);
-        //       },
-        //       child: const Icon(Icons.document_scanner_rounded),
-        //     ),
-        //   ],
-        //   overlayColor: Colors.grey,
-        // ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    pcsController.dispose();
-    super.dispose();
   }
 }

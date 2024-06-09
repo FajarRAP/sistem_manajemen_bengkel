@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../admin/widgets/item_transaksi.dart';
-import '../cubit/invoice_cubit.dart';
+import '../invoice/presentation/cubit/invoice_cubit.dart';
+import 'widgets/item_transaksi.dart';
 
 class TransactionPage extends StatelessWidget {
   const TransactionPage({super.key});

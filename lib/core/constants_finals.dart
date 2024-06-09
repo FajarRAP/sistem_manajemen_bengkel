@@ -1,6 +1,3 @@
-import 'package:bengkel_pak_bowo/injection_container.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../features/invoice/data/models/barang.dart';
 
 // API
@@ -17,7 +14,6 @@ final Map<String, String> endpoint = {
 };
 final Map<String, String> headers = {
   'Content-Type': 'application/json',
-  'Authorization': locator<SharedPreferences>().getString('token') ?? '',
 };
 
 // route name

@@ -1,6 +1,6 @@
 import 'package:bengkel_pak_bowo/features/admin/home.dart'
     as admin;
-import 'package:bengkel_pak_bowo/features/invoice/presentation/pages/transaction.dart'
+import 'package:bengkel_pak_bowo/features/admin/transaction.dart'
     as admin;
 import 'package:bengkel_pak_bowo/features/admin/profile.dart'
     as admin;

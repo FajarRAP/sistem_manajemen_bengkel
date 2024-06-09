@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../core/common/widgets/snackbar_error.dart';
+import '../../../../core/common/widgets/snackbar_success.dart';
 import '../../../../core/constants_finals.dart';
-import '../../../../injection_container.dart';
 import '../cubit/auth_cubit.dart';
 import '../widgets/form_auth.dart';
 import '../widgets/text_field_auth.dart';
@@ -32,34 +31,11 @@ class _LoginPageState extends State<LoginPage> {
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is LoginError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.red,
-              content: Text(
-                state.message,
-                style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w500),
-              ),
-            ),
-          );
+          errorSnackBar(context, state.message);
         }
 
         if (state is LoginAuthenticated) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.green.shade200,
-              content: Text(
-                state.message,
-                style: GoogleFonts.plusJakartaSans(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          );
-          final String? token = locator<SharedPreferences>().getString('token');
-          if (token != null) {
-            authCubit.credentials = JwtDecoder.decode(token);
-          }
+          successSnackBar(context, state.message);
           Navigator.pushNamed(context, homePage);
         }
       },
