@@ -3,9 +3,9 @@ import 'dart:typed_data';
 import 'package:intl/intl.dart';
 import 'package:pdf/widgets.dart';
 
-import '../../data/models/invoice.dart';
+import '../../domain/entities/invoice_entity.dart';
 
-Future<Uint8List> makePDF(final InvoiceModel invoice) async {
+Future<Uint8List> makePDF(Invoice invoice) async {
   final Document pdf = Document();
 
   pdf.addPage(
@@ -50,28 +50,22 @@ Future<Uint8List> makePDF(final InvoiceModel invoice) async {
               ],
             ),
             Divider(),
-            ListView.separated(
-              itemBuilder: (context, index) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      invoice.services[index].nama,
-                      style: const TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                    Text(
-                      'Rp. ${invoice.services[index].formattedHarga}',
-                      style: const TextStyle(
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                );
-              },
-              separatorBuilder: (context, index) => SizedBox(height: 12),
-              itemCount: invoice.services.length,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  invoice.service.name,
+                  style: const TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                Text(
+                  'Rp. ${invoice.service.formattedTotalHarga}',
+                  style: const TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ],
             ),
             Divider(),
             Row(
@@ -85,7 +79,7 @@ Future<Uint8List> makePDF(final InvoiceModel invoice) async {
                   ),
                 ),
                 Text(
-                  'Rp. ${invoice.formattedTotalHarga}',
+                  'Rp. ${invoice.service.formattedTotalHarga}',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -98,6 +92,6 @@ Future<Uint8List> makePDF(final InvoiceModel invoice) async {
       },
     ),
   );
-  
+
   return pdf.save();
 }

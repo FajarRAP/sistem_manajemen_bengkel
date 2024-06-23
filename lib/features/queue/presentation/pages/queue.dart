@@ -1,5 +1,5 @@
-import 'package:bengkel_pak_bowo/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:bengkel_pak_bowo/features/queue/presentation/cubit/queue_cubit.dart';
+import '../../../auth/presentation/cubit/auth_cubit.dart';
+import '../cubit/queue_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';

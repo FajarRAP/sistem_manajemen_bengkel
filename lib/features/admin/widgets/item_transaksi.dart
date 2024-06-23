@@ -1,11 +1,12 @@
+import 'package:bengkel_pak_bowo/features/invoice/presentation/cubit/invoice_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 import '../../../core/constants_finals.dart';
-import '../../invoice/data/models/invoice.dart';
-import '../../invoice/presentation/cubit/invoice_cubit.dart';
+import '../../invoice/domain/entities/invoice_entity.dart';
 
 class ItemTransaksi extends StatelessWidget {
   const ItemTransaksi({
@@ -13,7 +14,7 @@ class ItemTransaksi extends StatelessWidget {
     required this.invoice,
   });
 
-  final InvoiceModel invoice;
+  final Invoice invoice;
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +26,9 @@ class ItemTransaksi extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-            color: const Color(0xFFE0E0E0).withOpacity(.4),
-            borderRadius: BorderRadius.circular(10)),
+          color: const Color(0xFFE0E0E0).withOpacity(.4),
+          borderRadius: BorderRadius.circular(10),
+        ),
         padding: const EdgeInsets.symmetric(horizontal: 16),
         width: double.infinity,
         height: 75,
@@ -38,14 +40,14 @@ class ItemTransaksi extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  invoice.namaPelanggan,
+                  invoice.customer.name,
                   style: GoogleFonts.plusJakartaSans(
                       fontSize: 16, fontWeight: FontWeight.w500),
                 ),
                 Row(
                   children: [
                     Text(
-                      invoice.getDate,
+                      DateFormat('d MMMM y').format(invoice.boughtAt),
                       style: GoogleFonts.plusJakartaSans(
                           color: const Color(0xFF555555),
                           fontSize: 13,
@@ -54,14 +56,14 @@ class ItemTransaksi extends StatelessWidget {
                     const Gap(6),
                     Container(
                       decoration: BoxDecoration(
-                          color: const Color(0xFFD9D9D9),
-                          borderRadius: BorderRadius.circular(7)),
+                          borderRadius: BorderRadius.circular(7),
+                          color: const Color(0xFFD9D9D9)),
                       height: 7,
                       width: 7,
                     ),
                     const Gap(6),
                     Text(
-                      invoice.getTime,
+                      DateFormat('H:m').format(invoice.boughtAt),
                       style: GoogleFonts.plusJakartaSans(
                           color: const Color(0xFF555555),
                           fontSize: 13,

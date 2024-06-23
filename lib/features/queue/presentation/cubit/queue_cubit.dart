@@ -1,5 +1,5 @@
-import 'package:bengkel_pak_bowo/features/queue/domain/usecases/get_my_queue_today_use_case.dart';
-import 'package:bengkel_pak_bowo/features/queue/domain/usecases/pick_queue_use_case.dart';
+import '../../domain/usecases/get_my_queue_today_use_case.dart';
+import '../../domain/usecases/pick_queue_use_case.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -22,7 +22,8 @@ class QueueCubit extends Cubit<QueueState> {
   final GetMyQueueTodayUseCase getMyQueueTodayUseCase;
   final GetQueueTodayUseCase getQueueTodayUseCase;
 
-  int queueIndex = -1;
+  QueueEntity? queue;
+  // int queueIndex = -1;
 
   // User
   Future<void> getQueueNumToday() async {
@@ -50,7 +51,7 @@ class QueueCubit extends Cubit<QueueState> {
           case 400:
             emit(QueueNotAccepted());
             break;
-          case 403:
+          case >= 403 && <= 500:
             emit(PickQueueError(responseDecoded['message']));
           default:
         }
@@ -75,7 +76,13 @@ class QueueCubit extends Cubit<QueueState> {
 
     result.fold(
       (failure) => emit(QueueTodayError(failure.message)),
-      (success) => emit(QueueTodayLoaded(success)),
+      (success) {
+        if (success.isNotEmpty) {
+          emit(QueueTodayLoaded(success));
+        } else {
+          emit(QueueTodayEmpty());
+        }
+      },
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:bengkel_pak_bowo/features/auth/domain/entities/user.dart';
+import '../../domain/entities/user.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

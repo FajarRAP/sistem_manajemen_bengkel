@@ -1,81 +1,64 @@
-import 'dart:convert';
-
-import '../../../../core/constants_finals.dart';
-import '../../data/models/barang.dart';
-import '../../data/models/invoice.dart';
-import '../../data/repositories/invoice_repositories_impl.dart';
-import '../../../../injection_container.dart';
 import 'package:bloc/bloc.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../domain/entities/invoice_entity.dart';
+import '../../domain/usecases/create_invoice_use_case.dart';
+import '../../domain/usecases/get_invoice_by_username_use_case.dart';
+import '../../domain/usecases/get_invoices_use_case.dart';
 
 part 'invoice_state.dart';
 
 class InvoiceCubit extends Cubit<InvoiceState> {
-  InvoiceCubit() : super(InvoiceInitial());
+  InvoiceCubit({
+    required this.createInvoiceUseCase,
+    required this.getInvoicesUseCase,
+    required this.getInvoiceByUsernameUseCase,
+  }) : super(InvoiceInitial());
 
-  InvoiceModel? invoice;
-  List<InvoiceModel> invoices = [];
+  final CreateInvoiceUseCase createInvoiceUseCase;
+  final GetInvoicesUseCase getInvoicesUseCase;
+  final GetInvoiceByUsernameUseCase getInvoiceByUsernameUseCase;
 
-  // Getter
-  InvoiceModel get getInvoice => invoice!;
-  List<ServiceModel> get getServices => invoice!.services;
-  String get formattedTotalHarga => invoice!.formattedTotalHarga;
+  Invoice? invoice;
 
-  Future<void> getInvoices() async {
-    emit(ReadInvoiceLoading());
+  String get formattedBoughtAt =>
+      DateFormat('d MMMM y').format(invoice!.boughtAt);
 
-    final Map<String, String> headers = {
-      'Authorization': locator<SharedPreferences>().getString('token') ?? ''
-    };
+  Future<void> createInvoice(Invoice invoice) async {
+    emit(InvoiceCreating());
 
-    final results =
-        await locator<InvoiceRepositoriesImpl>().getInvoices(headers);
+    final result = await createInvoiceUseCase(invoice);
 
-    final prefs = locator<SharedPreferences>();
-    print(JwtDecoder.decode(prefs.getString('token') ?? ''));
-
-    results.fold(
-      (failure) {
-        emit(ReadInvoiceError(failure.message));
-      },
-      (success) {
-        invoices = success;
-        // success.clear();
-        if (success.isEmpty) {
-          emit(ReadInvoiceEmpty());
-        } else {
-          emit(ReadInvoiceLoaded(invoices));
-        }
-      },
+    result.fold(
+      (failure) => emit(InvoiceErrorCreated(failure.message)),
+      (success) => emit(InvoiceCreated(success)),
     );
   }
 
-  Future<void> createInvoice(final InvoiceModel invoice) async {
-    emit(InvoiceCreating());
+  Future<void> getInvoices() async {
+    emit(GetInvoiceLoading());
 
-    headers['Authorization'] =
-        locator<SharedPreferences>().getString('token') ?? '';
+    final result = await getInvoicesUseCase();
 
-    final results = await locator<InvoiceRepositoriesImpl>()
-        .createInvoices(headers, invoiceToJson(invoice));
+    result.fold(
+      (failure) => emit(GetInvoiceError(failure.message)),
+      (success) => success.isEmpty
+          ? emit(GetInvoiceEmpty())
+          : emit(GetInvoiceLoaded(success)),
+    );
+  }
 
-    results.fold(
-      (failure) {
-        emit(InvoiceErrorCreated(failure.message));
-      },
-      (response) {
-        switch (jsonDecode(response)['statusCode']) {
-          case 201:
-            emit(InvoiceCreated(jsonDecode(response)['message']));
-            break;
-          case 400:
-          case 403:
-            emit(InvoiceErrorCreated(jsonDecode(response)['message']));
-            break;
-        }
-      },
+  Future<void> getInvoiceByUsername(String username) async {
+    emit(GetInvoiceLoading());
+
+    final result = await getInvoiceByUsernameUseCase(username);
+
+    result.fold(
+      (failure) => emit(GetInvoiceError(failure.message)),
+      (success) => success.isEmpty
+          ? emit(GetInvoiceEmpty())
+          : emit(GetInvoiceLoaded(success)),
     );
   }
 }

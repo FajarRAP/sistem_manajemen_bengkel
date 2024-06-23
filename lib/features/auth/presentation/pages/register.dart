@@ -1,5 +1,5 @@
-import 'package:bengkel_pak_bowo/core/common/widgets/snackbar_error.dart';
-import 'package:bengkel_pak_bowo/core/common/widgets/snackbar_success.dart';
+import '../../../../core/common/widgets/snackbar_error.dart';
+import '../../../../core/common/widgets/snackbar_success.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';

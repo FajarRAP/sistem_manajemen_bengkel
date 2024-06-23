@@ -1,5 +1,5 @@
-import 'package:bengkel_pak_bowo/core/usecase/usecase_params.dart';
-import 'package:bengkel_pak_bowo/features/queue/domain/repositories/queue_repositories.dart';
+import '../../../../core/usecase/usecase_params.dart';
+import '../repositories/queue_repositories.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/failure.dart';

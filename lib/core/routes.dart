@@ -1,11 +1,11 @@
-import 'package:bengkel_pak_bowo/features/queue/presentation/pages/queue.dart';
 import 'package:flutter/material.dart';
 
+import '../features/auth/presentation/pages/login.dart';
+import '../features/auth/presentation/pages/register.dart';
 import '../features/invoice/presentation/pages/detail_invoice.dart';
 import '../features/invoice/presentation/pages/make_invoice.dart';
 import '../features/invoice/presentation/pages/preview_invoice.dart';
-import '../features/auth/presentation/pages/login.dart';
-import '../features/auth/presentation/pages/register.dart';
+import '../features/queue/presentation/pages/queue.dart';
 import '../init_screens/fragment_view.dart';
 import 'constants_finals.dart';
 

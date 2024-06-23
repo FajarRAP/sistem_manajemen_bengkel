@@ -1,16 +1,18 @@
-import 'package:bengkel_pak_bowo/core/common/widgets/snackbar_error.dart';
-import 'package:bengkel_pak_bowo/core/common/widgets/snackbar_success.dart';
-import 'package:bengkel_pak_bowo/features/queue/presentation/cubit/queue_cubit.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../core/common/widgets/snackbar_error.dart';
+import '../../../../core/common/widgets/snackbar_success.dart';
 import '../../../../core/constants_finals.dart';
-import '../../data/models/barang.dart';
-import '../cubit/barang_cubit.dart';
+import '../../../queue/presentation/cubit/queue_cubit.dart';
+import '../../data/models/invoice_model.dart';
+import '../../domain/entities/customer_entity.dart';
+import '../../domain/entities/service_entity.dart';
 import '../cubit/invoice_cubit.dart';
+import '../cubit/service_cubit.dart';
 
 class MakeInvoicePage extends StatefulWidget {
   const MakeInvoicePage({super.key});
@@ -22,9 +24,10 @@ class MakeInvoicePage extends StatefulWidget {
 class _MakeInvoicePageState extends State<MakeInvoicePage> {
   @override
   Widget build(BuildContext context) {
-    final barangCubit = BarangCubit();
     final invoiceCubit = context.read<InvoiceCubit>();
     final queueCubit = context.read<QueueCubit>();
+    final serviceCubit = ServiceCubit();
+    final formKey = GlobalKey<FormState>();
     final color = Theme.of(context).colorScheme;
 
     return BlocListener<InvoiceCubit, InvoiceState>(
@@ -87,7 +90,7 @@ class _MakeInvoicePageState extends State<MakeInvoicePage> {
                     ],
                   ),
                   margin: const EdgeInsets.symmetric(horizontal: 28),
-                  height: 525,
+                  height: 550,
                   child: Padding(
                     padding: const EdgeInsets.all(20),
                     child: Column(
@@ -106,48 +109,20 @@ class _MakeInvoicePageState extends State<MakeInvoicePage> {
                           ),
                         ),
                         const Gap(32),
-                        BlocBuilder<QueueCubit, QueueState>(
-                          buildWhen: (previous, current) =>
-                              current is QueueToday,
-                          builder: (context, state) {
-                            if (state is QueueTodayLoaded) {
-                              return Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    state.datas[queueCubit.queueIndex].name,
-                                    style: GoogleFonts.plusJakartaSans(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  Text(
-                                    state.datas[queueCubit.queueIndex].getDate,
-                                    style: GoogleFonts.plusJakartaSans(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
-                              );
-                            }
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Nama Pelanggan',
-                                  style: GoogleFonts.plusJakartaSans(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                Text(
-                                  'd MMMM y',
-                                  style: GoogleFonts.plusJakartaSans(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ],
-                            );
-                          },
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              queueCubit.queue?.name ?? 'Customer Name',
+                              style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 12, fontWeight: FontWeight.w500),
+                            ),
+                            Text(
+                              queueCubit.queue?.getDate ?? 'd MMMM y',
+                              style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 12, fontWeight: FontWeight.w500),
+                            ),
+                          ],
                         ),
                         const Gap(18),
                         const Divider(),
@@ -180,41 +155,38 @@ class _MakeInvoicePageState extends State<MakeInvoicePage> {
                               fontWeight: FontWeight.w600),
                         ),
                         const Gap(10),
-                        DropdownSearch<ServiceModel>(
-                          itemAsString: (item) => item.barangAsString,
-                          items: items,
-                          dropdownDecoratorProps: DropDownDecoratorProps(
-                            dropdownSearchDecoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(6)),
-                                  borderSide: BorderSide(color: color.outline)),
-                              contentPadding:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              hintText: 'Jasa',
-                            ),
-                          ),
-                          popupProps: PopupProps.menu(
-                            showSearchBox: false,
-                            emptyBuilder: (context, searchEntry) =>
-                                const Center(
-                              child: Text(
-                                'Tidak ada Data',
-                                textAlign: TextAlign.center,
+                        Form(
+                          key: formKey,
+                          child: DropdownSearch<Service>(
+                            itemAsString: (item) => item.name,
+                            items: items,
+                            dropdownDecoratorProps: DropDownDecoratorProps(
+                              dropdownSearchDecoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(6)),
+                                    borderSide:
+                                        BorderSide(color: color.outline)),
+                                contentPadding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                hintText: 'Jasa',
                               ),
                             ),
+                            popupProps: PopupProps.menu(
+                              showSearchBox: false,
+                              emptyBuilder: (context, searchEntry) =>
+                                  const Center(
+                                child: Text(
+                                  'Tidak ada Data',
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                            onChanged: (service) =>
+                                serviceCubit.pickService(service!),
+                            validator: (value) =>
+                                value == null ? 'Mohon Isi Jasa' : null,
                           ),
-                          onChanged: (value) {
-                            if (value != null) {
-                              barangCubit.servicePicked(value);
-                            }
-                          },
-                          validator: (value) {
-                            if (value == null) {
-                              return 'Mohon Isi Jasa';
-                            }
-                            return null;
-                          },
                         ),
                         const Gap(14),
                         Text(
@@ -223,8 +195,8 @@ class _MakeInvoicePageState extends State<MakeInvoicePage> {
                               fontWeight: FontWeight.w600),
                         ),
                         const Gap(10),
-                        BlocBuilder<BarangCubit, BarangState>(
-                          bloc: barangCubit,
+                        BlocBuilder<ServiceCubit, ServiceState>(
+                          bloc: serviceCubit,
                           builder: (context, state) {
                             return Container(
                               decoration: BoxDecoration(
@@ -237,7 +209,7 @@ class _MakeInvoicePageState extends State<MakeInvoicePage> {
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  'Rp. ${barangCubit.getHarga()}',
+                                  'Rp. ${serviceCubit.service?.formattedTotalHarga ?? '0'}',
                                   style: GoogleFonts.plusJakartaSans(
                                       fontWeight: FontWeight.w500),
                                 ),
@@ -251,7 +223,21 @@ class _MakeInvoicePageState extends State<MakeInvoicePage> {
                           child: SizedBox(
                             width: 110,
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                if (formKey.currentState!.validate()) {
+                                  invoiceCubit.createInvoice(
+                                    InvoiceModel(
+                                        queueNum:
+                                            queueCubit.queue?.queueNum ?? -1,
+                                        customer: Customer(
+                                            name: queueCubit.queue!.name,
+                                            username:
+                                                queueCubit.queue!.username),
+                                        service: serviceCubit.service!,
+                                        boughtAt: DateTime.now()),
+                                  );
+                                }
+                              },
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: color.primary,
                                   shape: RoundedRectangleBorder(

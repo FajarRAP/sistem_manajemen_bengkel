@@ -1,43 +1,67 @@
-import '../../../../core/failure.dart';
-import '../data_sources/remote.dart';
-import '../models/invoice.dart';
-import '../../domain/repositories/invoice_repositories.dart';
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
-import 'package:http/http.dart';
+
+import '../../../../core/failure.dart';
+import '../../domain/entities/invoice_entity.dart';
+import '../../domain/repositories/invoice_repositories.dart';
+import '../datasources/remote.dart';
+import '../models/invoice_model.dart';
 
 class InvoiceRepositoriesImpl implements InvoiceRepositories {
-  final InvoiceServices invoiceServices;
+  final InvoiceRemoteDataSource invoiceRemoteDataSource;
 
-  InvoiceRepositoriesImpl(this.invoiceServices);
+  InvoiceRepositoriesImpl(this.invoiceRemoteDataSource);
+
   @override
-  Future<Either<Failure, List<InvoiceModel>>> getInvoices(
-      Map<String, String> headers) async {
+  Future<Either<Failure, String>> createInvoice(Invoice invoice) async {
     try {
-      final Response response = await invoiceServices.getInvoices(headers);
-      print(response.body);
-      if (response.statusCode == 200) {
-        return Right(invoiceFromJson(response.body));
-      } else {
-        return Left(Failure(message: response.body));
+      final response = await invoiceRemoteDataSource.createInvoice(invoice);
+      final Map<String, dynamic> decoded = jsonDecode(response.body);
+
+      switch (decoded['statusCode']) {
+        case 400:
+          return Left(Failure(message: decoded['message']));
+        case 500:
+          return Left(Failure(message: decoded['message']));
       }
+      return Right(decoded['message']);
     } catch (e) {
       return Left(Failure(message: e.toString()));
     }
   }
 
   @override
-  Future<Either<Failure, String>> createInvoices(
-      Map<String, String> headers, final String body) async {
+  Future<Either<Failure, List<Invoice>>> getInvoices() async {
     try {
-      final Response response =
-          await invoiceServices.createInvoices(headers, body);
-      switch (response.statusCode) {
-        case 201:
-        case 400:
-        case 403:
-          return Right(response.body);
+      final response = await invoiceRemoteDataSource.getInvoices();
+      final Map<String, dynamic> decoded = jsonDecode(response.body);
+      
+      if (response.statusCode == 200) {
+        return Right((decoded['datas'] as List<dynamic>)
+            .map((e) => InvoiceModel.fromJson(e))
+            .toList());
       }
-      return Left(Failure());
+      return Left(Failure(message: decoded['message']));
+    } catch (e) {
+      return Left(Failure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Invoice>>> getInvoiceByUsername(
+      final String username) async {
+    try {
+      final response =
+          await invoiceRemoteDataSource.getInvoiceByUsername(username);
+      final Map<String, dynamic> decoded = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return Right((decoded['datas'] as List<dynamic>)
+            .map((e) => InvoiceModel.fromJson(e))
+            .toList());
+      }
+      return Left(Failure(message: decoded['statusCode']));
     } catch (e) {
       return Left(Failure(message: e.toString()));
     }

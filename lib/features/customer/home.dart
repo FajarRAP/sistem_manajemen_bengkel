@@ -1,14 +1,14 @@
-import 'package:bengkel_pak_bowo/core/common/widgets/snackbar_error.dart';
-import 'package:bengkel_pak_bowo/core/common/widgets/snackbar_success.dart';
-import 'package:bengkel_pak_bowo/features/queue/domain/usecases/pick_queue_use_case.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../core/common/widgets/snackbar_error.dart';
+import '../../core/common/widgets/snackbar_success.dart';
 import '../../core/constants_finals.dart';
 import '../auth/presentation/cubit/auth_cubit.dart';
+import '../queue/domain/usecases/pick_queue_use_case.dart';
 import '../queue/presentation/cubit/queue_cubit.dart';
 import 'widgets/item_jasa.dart';
 
@@ -24,13 +24,16 @@ class HomePage extends StatelessWidget {
     return BlocListener<QueueCubit, QueueState>(
       listener: (context, state) {
         if (state is PickQueueError) {
+          queueCubit.getQueueNumToday();
           errorSnackBar(context, state.message);
         }
         if (state is PickQueueSuccess) {
+          queueCubit.getQueueNumToday();
           successSnackBar(context, state.message);
         }
         if (state is QueueNotAccepted) {
           queueCubit.getMyQueueToday(authCubit.getUsername);
+          queueCubit.getQueueNumToday();
           Navigator.pushNamed(context, queuePage);
         }
       },
@@ -122,6 +125,7 @@ class HomePage extends StatelessWidget {
                               buildWhen: (previous, current) =>
                                   current is PickQueue,
                               builder: (context, state) {
+                                print(state);
                                 if (state is PickQueueLoading) {
                                   return const Center(
                                       child: CircularProgressIndicator(

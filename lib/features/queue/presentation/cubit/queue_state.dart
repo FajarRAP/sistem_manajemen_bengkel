@@ -31,6 +31,8 @@ class QueueTodayLoaded extends QueueToday {
   QueueTodayLoaded(this.datas);
 }
 
+class QueueTodayEmpty extends QueueToday {}
+
 class QueueTodayError extends QueueToday {
   final String message;
   QueueTodayError(this.message);

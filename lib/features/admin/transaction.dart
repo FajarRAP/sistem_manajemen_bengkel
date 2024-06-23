@@ -11,7 +11,7 @@ class TransactionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final InvoiceCubit invoiceCubit = context.read<InvoiceCubit>();
+    final invoiceCubit = context.read<InvoiceCubit>();
     final color = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -21,6 +21,7 @@ class TransactionPage extends StatelessWidget {
             SliverAppBar(
               backgroundColor: color.primary,
               centerTitle: true,
+              leading: const SizedBox(),
               title: Text(
                 'Riwayat Transaksi',
                 style: GoogleFonts.plusJakartaSans(
@@ -33,18 +34,20 @@ class TransactionPage extends StatelessWidget {
         },
         body: BlocBuilder<InvoiceCubit, InvoiceState>(
           bloc: invoiceCubit..getInvoices(),
-          buildWhen: (previous, current) => current is ReadInvoice,
+          buildWhen: (previous, current) => current is GetInvoice,
           builder: (context, state) {
+            print(state);
             // Loading
-            if (state is ReadInvoiceLoading) {
+            if (state is GetInvoiceLoading) {
               return const Center(child: CircularProgressIndicator());
             }
 
             // Loaded
-            if (state is ReadInvoiceLoaded) {
+            if (state is GetInvoiceLoaded) {
               return RefreshIndicator(
                 displacement: 10,
                 onRefresh: () async => invoiceCubit.getInvoices(),
+                // onRefresh: () async {},
                 child: ListView.separated(
                   padding: const EdgeInsets.all(20),
                   itemBuilder: (context, index) =>
@@ -56,12 +59,18 @@ class TransactionPage extends StatelessWidget {
             }
 
             // Empty
-            if (state is ReadInvoiceEmpty) {
+            if (state is GetInvoiceEmpty) {
               return const Center(
                 child: Text(
                   'Belum Ada Transaksi',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
+              );
+            }
+
+            if (state is GetInvoiceError) {
+              return Center(
+                child: Text(state.message),
               );
             }
 

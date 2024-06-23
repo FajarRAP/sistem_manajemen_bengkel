@@ -5,25 +5,25 @@ sealed class InvoiceState {}
 
 final class InvoiceInitial extends InvoiceState {}
 
-class ReadInvoice extends InvoiceState {}
-
-class ReadInvoiceLoading extends ReadInvoice {}
-
-class ReadInvoiceLoaded extends ReadInvoice {
-  final List<InvoiceModel> data;
-
-  ReadInvoiceLoaded(this.data);
-}
-
-class ReadInvoiceEmpty extends ReadInvoice {}
-
-class ReadInvoiceError extends ReadInvoice {
-  final String message;
-
-  ReadInvoiceError(this.message);
-}
+class GetInvoice extends InvoiceState {}
 
 class CreateInvoice extends InvoiceState {}
+
+class GetInvoiceLoading extends GetInvoice {}
+
+class GetInvoiceLoaded extends GetInvoice {
+  final List<Invoice> data;
+
+  GetInvoiceLoaded(this.data);
+}
+
+class GetInvoiceEmpty extends GetInvoice {}
+
+class GetInvoiceError extends GetInvoice {
+  final String message;
+
+  GetInvoiceError(this.message);
+}
 
 class InvoiceCreating extends CreateInvoice {}
 

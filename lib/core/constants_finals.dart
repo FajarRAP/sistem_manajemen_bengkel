@@ -1,4 +1,4 @@
-import '../features/invoice/data/models/barang.dart';
+import '../features/invoice/domain/entities/service_entity.dart';
 
 // API
 // const String url = 'https://bengkel-pak-bowo-services.vercel.app/';
@@ -27,12 +27,12 @@ const String previewInvoicePage = '${invoicePage}preview/';
 const String homePage = '${initialRoute}home/';
 const String queuePage = '${initialRoute}detailAntrian/';
 
-final List<ServiceModel> items = [
-  ServiceModel(nama: 'Cat Full Body', harga: 12000000),
-  ServiceModel(nama: 'Cat Per Panel', harga: 700000),
-  ServiceModel(nama: 'Poles Cat Body', harga: 800000),
-  ServiceModel(nama: 'Servis AC', harga: 1100000),
-  ServiceModel(nama: 'Tune Up', harga: 600000),
-  ServiceModel(nama: 'Modif Body Full Cat', harga: 15000000),
-  ServiceModel(nama: 'Ganti Kapas Kopling', harga: 500000),
+final List<Service> items = [
+  Service(name: 'Cat Full Body', price: 12000000),
+  Service(name: 'Cat Per Panel', price: 700000),
+  Service(name: 'Poles Cat Body', price: 800000),
+  Service(name: 'Servis AC', price: 1100000),
+  Service(name: 'Tune Up', price: 600000),
+  Service(name: 'Modif Body Full Cat', price: 15000000),
+  Service(name: 'Ganti Kapas Kopling', price: 500000),
 ];

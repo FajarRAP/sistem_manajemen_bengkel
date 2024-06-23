@@ -14,6 +14,7 @@ class QueueModel extends QueueEntity {
     required super.queueNum,
     required super.username,
     required super.name,
+    required super.isAccepted,
     required super.issuedAt,
   });
 
@@ -21,12 +22,14 @@ class QueueModel extends QueueEntity {
       queueNum: json["queue_no"],
       username: json["username"],
       name: json["name"],
+      isAccepted: json["accepted"],
       issuedAt: DateTime.parse(json["issued_at"]));
 
   Map<String, dynamic> toJson() => {
         "queue_no": queueNum,
         "username": username,
         "name": name,
+        "accepted": isAccepted,
         "issued_at": issuedAt,
       };
 }

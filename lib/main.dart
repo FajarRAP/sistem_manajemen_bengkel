@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => InvoiceCubit()),
+        BlocProvider(create: (context) => locator<InvoiceCubit>()),
         BlocProvider(create: (context) => locator<QueueCubit>()),
         BlocProvider(create: (context) => locator<AuthCubit>()),
       ],

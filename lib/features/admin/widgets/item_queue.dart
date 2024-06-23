@@ -1,4 +1,4 @@
-import 'package:bengkel_pak_bowo/core/constants_finals.dart';
+import '../../../core/constants_finals.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,7 +19,9 @@ class ItemQueue extends StatelessWidget {
 
     return InkWell(
       borderRadius: BorderRadius.circular(10),
-      onTap: () => Navigator.pushNamed(context, makeInvoicePage),
+      onTap: () => !queue.isAccepted
+          ? Navigator.pushNamed(context, makeInvoicePage)
+          : null,
       child: Container(
         decoration: BoxDecoration(
             color: const Color(0xFFE0E0E0).withOpacity(.4),
@@ -75,13 +77,15 @@ class ItemQueue extends StatelessWidget {
               width: 40,
               height: 40,
               child: Center(
-                child: Text(
-                  '${queue.queueNum}',
-                  style: GoogleFonts.plusJakartaSans(
-                      color: color.secondary,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600),
-                ),
+                child: queue.isAccepted
+                    ? Icon(Icons.check, color: color.secondary)
+                    : Text(
+                        '${queue.queueNum}',
+                        style: GoogleFonts.plusJakartaSans(
+                            color: color.secondary,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600),
+                      ),
               ),
             ),
           ],

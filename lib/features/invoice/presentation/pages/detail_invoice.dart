@@ -1,17 +1,18 @@
-import '../../../../core/constants_finals.dart';
-import '../cubit/invoice_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../../../core/constants_finals.dart';
+import '../cubit/invoice_cubit.dart';
 
 class DetailInvoicePage extends StatelessWidget {
   const DetailInvoicePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final InvoiceCubit invoiceCubit = context.read<InvoiceCubit>();
     final color = Theme.of(context).colorScheme;
+    final invoiceCubit = context.read<InvoiceCubit>();
 
     return Scaffold(
       body: Container(
@@ -79,12 +80,13 @@ class DetailInvoicePage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          invoiceCubit.getInvoice.namaPelanggan,
+                          invoiceCubit.invoice?.customer.name ??
+                              'Nama Pelanggan',
                           style: GoogleFonts.plusJakartaSans(
                               fontWeight: FontWeight.w500),
                         ),
                         Text(
-                          invoiceCubit.getInvoice.getDate,
+                          invoiceCubit.formattedBoughtAt,
                           style: GoogleFonts.plusJakartaSans(
                               fontWeight: FontWeight.w500),
                         ),
@@ -106,7 +108,7 @@ class DetailInvoicePage extends StatelessWidget {
                                 fontWeight: FontWeight.w600),
                           ),
                           Text(
-                            '8',
+                            '${invoiceCubit.invoice?.queueNum ?? 'No Antrian'}',
                             style: GoogleFonts.plusJakartaSans(
                                 fontWeight: FontWeight.w600),
                           ),
@@ -114,31 +116,25 @@ class DetailInvoicePage extends StatelessWidget {
                       ),
                     ),
                     const Gap(12),
-                    ListView.separated(
-                      padding: EdgeInsets.zero,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) => Container(
-                        color: const Color(0xFF88AAF1).withOpacity(.4),
-                        padding: const EdgeInsets.all(8),
-                        width: double.infinity,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Layanan',
-                              style: GoogleFonts.plusJakartaSans(
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            Text(
-                              invoiceCubit.getServices[index].nama,
-                              style: GoogleFonts.plusJakartaSans(
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ],
-                        ),
+                    Container(
+                      color: const Color(0xFF88AAF1).withOpacity(.4),
+                      padding: const EdgeInsets.all(8),
+                      width: double.infinity,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Layanan',
+                            style: GoogleFonts.plusJakartaSans(
+                                fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                            invoiceCubit.invoice?.service.name ?? 'Nama Jasa',
+                            style: GoogleFonts.plusJakartaSans(
+                                fontWeight: FontWeight.w600),
+                          ),
+                        ],
                       ),
-                      separatorBuilder: (context, index) => const Gap(12),
-                      itemCount: invoiceCubit.getServices.length,
                     ),
                     const Gap(12),
                     Container(
@@ -154,7 +150,7 @@ class DetailInvoicePage extends StatelessWidget {
                                 fontWeight: FontWeight.w600),
                           ),
                           Text(
-                            'Rp. ${invoiceCubit.formattedTotalHarga}',
+                            'Rp. ${invoiceCubit.invoice?.service.formattedTotalHarga}',
                             style: GoogleFonts.plusJakartaSans(
                                 fontWeight: FontWeight.w600),
                           ),

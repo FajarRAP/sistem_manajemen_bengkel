@@ -1,4 +1,4 @@
-import 'package:bengkel_pak_bowo/core/constants_finals.dart';
+import '../../../../core/constants_finals.dart';
 import 'package:http/http.dart';
 
 abstract interface class QueueRemoteDataSource {

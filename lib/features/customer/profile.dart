@@ -1,3 +1,4 @@
+import 'package:bengkel_pak_bowo/features/invoice/presentation/cubit/invoice_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -10,14 +11,14 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authCubit = context.read<AuthCubit>();
     final color = Theme.of(context).colorScheme;
+    final authCubit = context.read<AuthCubit>();
+    final invoiceCubit = context.read<InvoiceCubit>();
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: color.primary,
-        leading: const SizedBox(),
-        leadingWidth: 0,
         title: Align(
           alignment: Alignment.center,
           child: Column(
@@ -35,11 +36,13 @@ class ProfilePage extends StatelessWidget {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(30)),
                 margin: const EdgeInsets.symmetric(horizontal: 40),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 26, vertical: 13),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 26,
+                  vertical: 13,
+                ),
                 width: double.infinity,
                 child: Text(
-                  authCubit.credentials['name'],
+                  authCubit.getName,
                   style: GoogleFonts.plusJakartaSans(
                       fontSize: 18, fontWeight: FontWeight.w600),
                   textAlign: TextAlign.center,
@@ -54,7 +57,6 @@ class ProfilePage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
           children: [
-            const Gap(48),
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
@@ -68,10 +70,16 @@ class ProfilePage extends StatelessWidget {
                 color: Colors.white,
               ),
               padding: const EdgeInsets.all(12),
+              margin: const EdgeInsets.symmetric(vertical: 24),
               width: double.infinity,
-              height: 450,
+              height: 480,
+              child: BlocBuilder<InvoiceCubit, InvoiceState>(
+                builder: (context, state) {
+                  print(invoiceCubit.invoice);
+                  return Text('bokep');
+                },
+              ),
             ),
-            const Gap(40),
             SizedBox(
               height: 45,
               width: double.infinity,
