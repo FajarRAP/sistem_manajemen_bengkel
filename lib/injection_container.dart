@@ -11,7 +11,9 @@ import 'features/invoice/data/datasources/remote.dart';
 import 'features/invoice/data/repositories/invoice_repositories_impl.dart';
 import 'features/invoice/domain/repositories/invoice_repositories.dart';
 import 'features/invoice/domain/usecases/create_invoice_use_case.dart';
-import 'features/invoice/domain/usecases/get_invoice_by_username_use_case.dart';
+import 'features/invoice/domain/usecases/get_expense_use_case.dart';
+import 'features/invoice/domain/usecases/get_income_use_case.dart';
+import 'features/invoice/domain/usecases/get_invoices_by_username_use_case.dart';
 import 'features/invoice/domain/usecases/get_invoices_use_case.dart';
 import 'features/invoice/presentation/cubit/invoice_cubit.dart';
 import 'features/queue/data/datasources/remote_datasource.dart';
@@ -34,8 +36,10 @@ Future<void> dependencyInjection() async {
 
   // Use Case Invoice
   locator.registerLazySingleton(() => CreateInvoiceUseCase(locator()));
-  locator.registerLazySingleton(()=> GetInvoicesUseCase(locator()));
-  locator.registerLazySingleton(()=> GetInvoiceByUsernameUseCase(locator()));
+  locator.registerLazySingleton(() => GetInvoicesUseCase(locator()));
+  locator.registerLazySingleton(() => GetInvoicesByUsernameUseCase(locator()));
+  locator.registerLazySingleton(() => GetExpenseAtMonthUseCase(locator()));
+  locator.registerLazySingleton(() => GetIncomeUseCase(locator()));
 
   // Auth
   locator.registerLazySingleton<AuthRemoteDataSource>(
@@ -75,7 +79,9 @@ Future<void> dependencyInjection() async {
   locator.registerLazySingleton(() => InvoiceCubit(
         createInvoiceUseCase: locator(),
         getInvoicesUseCase: locator(),
-        getInvoiceByUsernameUseCase: locator(),
+        getInvoicesByUsernameUseCase: locator(),
+        getExpenseAtMonthUseCase: locator(),
+        getIncomeUseCase: locator(),
       ));
 
   // Sharedpreferences

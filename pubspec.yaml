@@ -50,6 +50,7 @@ dependencies:
   shared_preferences: ^2.2.3
   jwt_decoder: ^2.0.1
   flutter_svg: ^2.0.10+1
+  month_picker_dialog: ^4.0.0
 
 dev_dependencies:
   flutter_test:

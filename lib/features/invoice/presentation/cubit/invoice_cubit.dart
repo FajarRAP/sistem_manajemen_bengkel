@@ -1,10 +1,11 @@
 import 'package:bloc/bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
 
 import '../../domain/entities/invoice_entity.dart';
 import '../../domain/usecases/create_invoice_use_case.dart';
-import '../../domain/usecases/get_invoice_by_username_use_case.dart';
+import '../../domain/usecases/get_expense_use_case.dart';
+import '../../domain/usecases/get_income_use_case.dart';
+import '../../domain/usecases/get_invoices_by_username_use_case.dart';
 import '../../domain/usecases/get_invoices_use_case.dart';
 
 part 'invoice_state.dart';
@@ -13,17 +14,18 @@ class InvoiceCubit extends Cubit<InvoiceState> {
   InvoiceCubit({
     required this.createInvoiceUseCase,
     required this.getInvoicesUseCase,
-    required this.getInvoiceByUsernameUseCase,
+    required this.getInvoicesByUsernameUseCase,
+    required this.getExpenseAtMonthUseCase,
+    required this.getIncomeUseCase,
   }) : super(InvoiceInitial());
 
   final CreateInvoiceUseCase createInvoiceUseCase;
   final GetInvoicesUseCase getInvoicesUseCase;
-  final GetInvoiceByUsernameUseCase getInvoiceByUsernameUseCase;
+  final GetInvoicesByUsernameUseCase getInvoicesByUsernameUseCase;
+  final GetExpenseAtMonthUseCase getExpenseAtMonthUseCase;
+  final GetIncomeUseCase getIncomeUseCase;
 
   Invoice? invoice;
-
-  String get formattedBoughtAt =>
-      DateFormat('d MMMM y').format(invoice!.boughtAt);
 
   Future<void> createInvoice(Invoice invoice) async {
     emit(InvoiceCreating());
@@ -49,16 +51,43 @@ class InvoiceCubit extends Cubit<InvoiceState> {
     );
   }
 
-  Future<void> getInvoiceByUsername(String username) async {
+  Future<void> getInvoicesByUsername(String username) async {
     emit(GetInvoiceLoading());
 
-    final result = await getInvoiceByUsernameUseCase(username);
+    final result = await getInvoicesByUsernameUseCase(username);
 
     result.fold(
       (failure) => emit(GetInvoiceError(failure.message)),
       (success) => success.isEmpty
           ? emit(GetInvoiceEmpty())
           : emit(GetInvoiceLoaded(success)),
+    );
+  }
+
+  Future<void> getExpenseAtMonth(String username, String month) async {
+    emit(GetTransactionLoading());
+
+    final result = await getExpenseAtMonthUseCase(
+        GetExpenseParams(username: username, month: month));
+
+    result.fold(
+      (failure) => emit(GetTransactionError(failure.message)),
+      (success) => success == 0
+          ? emit(GetTransactionEmpty())
+          : emit(GetTransactionLoaded(success)),
+    );
+  }
+
+  Future<void> getIncome() async {
+    emit(GetTransactionLoading());
+
+    final result = await getIncomeUseCase();
+
+    result.fold(
+      (failure) => emit(GetTransactionError(failure.message)),
+      (success) => success == 0
+          ? emit(GetInvoiceEmpty())
+          : emit(GetTransactionLoaded(success)),
     );
   }
 }

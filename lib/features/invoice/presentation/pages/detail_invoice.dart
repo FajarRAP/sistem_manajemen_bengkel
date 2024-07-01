@@ -86,7 +86,8 @@ class DetailInvoicePage extends StatelessWidget {
                               fontWeight: FontWeight.w500),
                         ),
                         Text(
-                          invoiceCubit.formattedBoughtAt,
+                          invoiceCubit.invoice?.formattedBoughtAt ??
+                              'Tanggal Transaksi',
                           style: GoogleFonts.plusJakartaSans(
                               fontWeight: FontWeight.w500),
                         ),

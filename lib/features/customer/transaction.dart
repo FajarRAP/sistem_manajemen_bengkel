@@ -34,7 +34,7 @@ class TransactionPage extends StatelessWidget {
           ),
         ],
         body: BlocBuilder<InvoiceCubit, InvoiceState>(
-          bloc: invoiceCubit..getInvoiceByUsername(authCubit.getUsername),
+          bloc: invoiceCubit..getInvoicesByUsername(authCubit.getUsername),
           buildWhen: (previous, current) => current is GetInvoice,
           builder: (context, state) {
             // Loading
@@ -47,14 +47,16 @@ class TransactionPage extends StatelessWidget {
               return RefreshIndicator(
                 displacement: 10,
                 onRefresh: () async =>
-                    invoiceCubit.getInvoiceByUsername(authCubit.getUsername),
-                // onRefresh: () async {},
-                child: ListView.separated(
-                  padding: const EdgeInsets.all(20),
-                  itemBuilder: (context, index) =>
-                      ItemTransaksi(invoice: state.data[index]),
-                  separatorBuilder: (context, index) => const Gap(12),
-                  itemCount: state.data.length,
+                    invoiceCubit.getInvoicesByUsername(authCubit.getUsername),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 90),
+                  child: ListView.separated(
+                    padding: const EdgeInsets.all(20),
+                    itemBuilder: (context, index) =>
+                        ItemTransaksi(invoice: state.data[index]),
+                    separatorBuilder: (context, index) => const Gap(12),
+                    itemCount: state.data.length,
+                  ),
                 ),
               );
             }
@@ -64,7 +66,10 @@ class TransactionPage extends StatelessWidget {
               return const Center(
                 child: Text(
                   'Belum Ada Transaksi',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               );
             }

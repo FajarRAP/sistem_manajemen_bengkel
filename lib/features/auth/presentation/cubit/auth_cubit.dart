@@ -100,10 +100,6 @@ class AuthCubit extends Cubit<AuthState> {
         backgroundColor: Theme.of(context).colorScheme.primary));
   }
 
-  String? validate(String? value) {
-    if (value?.trim() == "") {
-      return "Form Harus Diisi";
-    }
-    return null;
-  }
+  String? validate(String? value) =>
+      (value?.trim() == "") ? "Form Harus Diisi" : null;
 }

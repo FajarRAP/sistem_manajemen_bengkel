@@ -36,7 +36,7 @@ class InvoiceRepositoriesImpl implements InvoiceRepositories {
     try {
       final response = await invoiceRemoteDataSource.getInvoices();
       final Map<String, dynamic> decoded = jsonDecode(response.body);
-      
+
       if (response.statusCode == 200) {
         return Right((decoded['datas'] as List<dynamic>)
             .map((e) => InvoiceModel.fromJson(e))
@@ -49,8 +49,8 @@ class InvoiceRepositoriesImpl implements InvoiceRepositories {
   }
 
   @override
-  Future<Either<Failure, List<Invoice>>> getInvoiceByUsername(
-      final String username) async {
+  Future<Either<Failure, List<Invoice>>> getInvoicesByUsername(
+      String username) async {
     try {
       final response =
           await invoiceRemoteDataSource.getInvoiceByUsername(username);
@@ -62,6 +62,40 @@ class InvoiceRepositoriesImpl implements InvoiceRepositories {
             .toList());
       }
       return Left(Failure(message: decoded['statusCode']));
+    } catch (e) {
+      return Left(Failure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>> getExpenseAtMonth(
+      String username, String month) async {
+    try {
+      final response =
+          await invoiceRemoteDataSource.getExpense(username, month);
+      final decoded = jsonDecode(response.body);
+      print('$username $month');
+      print(response.body);
+
+      if (response.statusCode == 200) {
+        return Right(decoded['expense']);
+      }
+      return Left(Failure());
+    } catch (e) {
+      return Left(Failure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>> getIncome() async {
+    try {
+      final response = await invoiceRemoteDataSource.getIncome();
+      final decoded = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return Right(decoded['income']);
+      }
+      return Left(Failure());
     } catch (e) {
       return Left(Failure(message: e.toString()));
     }

@@ -9,6 +9,8 @@ class GetInvoice extends InvoiceState {}
 
 class CreateInvoice extends InvoiceState {}
 
+class GetTransaction extends InvoiceState {}
+
 class GetInvoiceLoading extends GetInvoice {}
 
 class GetInvoiceLoaded extends GetInvoice {
@@ -37,4 +39,20 @@ class InvoiceErrorCreated extends CreateInvoice {
   final String message;
 
   InvoiceErrorCreated(this.message);
+}
+
+class GetTransactionLoading extends GetTransaction {}
+
+class GetTransactionLoaded extends GetTransaction {
+  final int amount;
+
+  GetTransactionLoaded(this.amount);
+}
+
+class GetTransactionEmpty extends GetTransaction {}
+
+class GetTransactionError extends GetTransaction {
+  final String message;
+
+  GetTransactionError(this.message);
 }

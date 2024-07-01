@@ -1,8 +1,8 @@
 import '../features/invoice/domain/entities/service_entity.dart';
 
 // API
-// const String url = 'https://bengkel-pak-bowo-services.vercel.app/';
-const String url = 'http://10.0.2.2:3001/';
+const String url = 'https://bengkel-pak-bowo-services.vercel.app/';
+// const String url = 'http://10.0.2.2:3001/';
 
 final Map<String, String> endpoint = {
   'invoice': 'invoice',
@@ -10,7 +10,9 @@ final Map<String, String> endpoint = {
   'register': 'register',
   'queue': 'queue',
   'queueNum': 'queueNum',
-  'queueMe': 'queueMe'
+  'queueMe': 'queueMe',
+  'income': 'income',
+  'expense': 'expense',
 };
 final Map<String, String> headers = {
   'Content-Type': 'application/json',

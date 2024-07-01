@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
 
         if (state is LoginAuthenticated) {
           successSnackBar(context, state.message);
-          Navigator.pushNamed(context, homePage);
+          Navigator.pushReplacementNamed(context, homePage);
         }
       },
       child: Scaffold(
