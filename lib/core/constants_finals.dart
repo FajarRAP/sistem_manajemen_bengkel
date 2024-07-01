@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import '../features/invoice/domain/entities/service_entity.dart';
 
 // API
@@ -37,4 +39,25 @@ final List<Service> items = [
   Service(name: 'Tune Up', price: 600000),
   Service(name: 'Modif Body Full Cat', price: 15000000),
   Service(name: 'Ganti Kapas Kopling', price: 500000),
+];
+
+const List<BoxShadow> doubleBoxShadow = [
+  BoxShadow(
+      blurRadius: 3,
+      spreadRadius: 0,
+      offset: Offset(0, 1),
+      color: Color.fromRGBO(0, 0, 0, 0.1)),
+  BoxShadow(
+      blurRadius: 5,
+      spreadRadius: 0,
+      offset: Offset(0, 5),
+      color: Color.fromRGBO(0, 0, 0, .09)),
+];
+
+const List<BoxShadow> singleBoxShadow = [
+  BoxShadow(
+    blurRadius: 4,
+    spreadRadius: 1,
+    color: Color.fromRGBO(0, 0, 0, .25),
+  ),
 ];

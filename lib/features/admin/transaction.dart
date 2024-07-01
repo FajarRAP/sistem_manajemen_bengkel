@@ -11,32 +11,29 @@ class TransactionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final invoiceCubit = context.read<InvoiceCubit>();
     final color = Theme.of(context).colorScheme;
+    final invoiceCubit = context.read<InvoiceCubit>();
 
     return Scaffold(
       body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [
-            SliverAppBar(
-              backgroundColor: color.primary,
-              centerTitle: true,
-              leading: const SizedBox(),
-              title: Text(
-                'Riwayat Transaksi',
-                style: GoogleFonts.plusJakartaSans(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600),
-              ),
+        headerSliverBuilder: (context, innerBoxIsScrolled) => [
+          SliverAppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: color.primary,
+            centerTitle: true,
+            title: Text(
+              'Riwayat Transaksi',
+              style: GoogleFonts.plusJakartaSans(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600),
             ),
-          ];
-        },
+          ),
+        ],
         body: BlocBuilder<InvoiceCubit, InvoiceState>(
           bloc: invoiceCubit..getInvoices(),
           buildWhen: (previous, current) => current is GetInvoice,
           builder: (context, state) {
-            print(state);
             // Loading
             if (state is GetInvoiceLoading) {
               return const Center(child: CircularProgressIndicator());
@@ -47,13 +44,15 @@ class TransactionPage extends StatelessWidget {
               return RefreshIndicator(
                 displacement: 10,
                 onRefresh: () async => invoiceCubit.getInvoices(),
-                // onRefresh: () async {},
-                child: ListView.separated(
-                  padding: const EdgeInsets.all(20),
-                  itemBuilder: (context, index) =>
-                      ItemTransaksi(invoice: state.data[index]),
-                  separatorBuilder: (context, index) => const Gap(12),
-                  itemCount: state.data.length,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 90),
+                  child: ListView.separated(
+                    padding: const EdgeInsets.all(20),
+                    itemBuilder: (context, index) =>
+                        ItemTransaksi(invoice: state.data[index]),
+                    separatorBuilder: (context, index) => const Gap(12),
+                    itemCount: state.data.length,
+                  ),
                 ),
               );
             }
@@ -65,12 +64,6 @@ class TransactionPage extends StatelessWidget {
                   'Belum Ada Transaksi',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
-              );
-            }
-
-            if (state is GetInvoiceError) {
-              return Center(
-                child: Text(state.message),
               );
             }
 

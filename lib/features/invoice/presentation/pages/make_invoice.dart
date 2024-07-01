@@ -14,14 +14,9 @@ import '../../domain/entities/service_entity.dart';
 import '../cubit/invoice_cubit.dart';
 import '../cubit/service_cubit.dart';
 
-class MakeInvoicePage extends StatefulWidget {
+class MakeInvoicePage extends StatelessWidget {
   const MakeInvoicePage({super.key});
 
-  @override
-  State<MakeInvoicePage> createState() => _MakeInvoicePageState();
-}
-
-class _MakeInvoicePageState extends State<MakeInvoicePage> {
   @override
   Widget build(BuildContext context) {
     final invoiceCubit = context.read<InvoiceCubit>();
@@ -227,8 +222,7 @@ class _MakeInvoicePageState extends State<MakeInvoicePage> {
                                 if (formKey.currentState!.validate()) {
                                   invoiceCubit.createInvoice(
                                     InvoiceModel(
-                                        queueNum:
-                                            queueCubit.queue?.queueNum ?? -1,
+                                        queueNum: queueCubit.queue!.queueNum,
                                         customer: Customer(
                                             name: queueCubit.queue!.name,
                                             username:

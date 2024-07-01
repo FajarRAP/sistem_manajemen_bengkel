@@ -17,7 +17,7 @@ class QueueRepositoriesImpl implements QueueRepositories {
   Future<Either<Failure, int>> getQueueNumToday() async {
     try {
       final Response response = await queueRemoteDataSource.getQueueNumToday();
-      print('Dari Get Queue Num Today ${response.body}');
+      
 
       if (response.statusCode == 200) {
         return Right(jsonDecode(response.body)['message']);
@@ -33,7 +33,7 @@ class QueueRepositoriesImpl implements QueueRepositories {
   Future<Either<Failure, List<QueueEntity>>> getQueueToday() async {
     try {
       final Response response = await queueRemoteDataSource.getQueueToday();
-      print('Dari Get Queue Today ${response.body}');
+      
 
       if (response.statusCode == 200) {
         return Right(queuesFromJson(response.body));
@@ -51,7 +51,7 @@ class QueueRepositoriesImpl implements QueueRepositories {
     try {
       final Response response = await queueRemoteDataSource
           .pickQueue(jsonEncode({"username": username, "name": name}));
-      print('Dari Pick Queue ${response.body}');
+      
       if (response.statusCode > 0) {
         return Right(jsonDecode(response.body));
       } else {
@@ -68,7 +68,7 @@ class QueueRepositoriesImpl implements QueueRepositories {
     try {
       final Response response =
           await queueRemoteDataSource.getMyQueueToday(username);
-      print('Dari Get My Queue Today ${response.body}');
+      
 
       if (response.statusCode == 200) {
         return Right(queueFromJson(response.body));

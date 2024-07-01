@@ -23,7 +23,6 @@ class QueueCubit extends Cubit<QueueState> {
   final GetQueueTodayUseCase getQueueTodayUseCase;
 
   QueueEntity? queue;
-  // int queueIndex = -1;
 
   // User
   Future<void> getQueueNumToday() async {

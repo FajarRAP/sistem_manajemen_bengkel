@@ -18,6 +18,7 @@ class InvoiceRepositoriesImpl implements InvoiceRepositories {
     try {
       final response = await invoiceRemoteDataSource.createInvoice(invoice);
       final Map<String, dynamic> decoded = jsonDecode(response.body);
+      
 
       switch (decoded['statusCode']) {
         case 400:
@@ -74,8 +75,7 @@ class InvoiceRepositoriesImpl implements InvoiceRepositories {
       final response =
           await invoiceRemoteDataSource.getExpense(username, month);
       final decoded = jsonDecode(response.body);
-      print('$username $month');
-      print(response.body);
+      
 
       if (response.statusCode == 200) {
         return Right(decoded['expense']);
@@ -87,7 +87,7 @@ class InvoiceRepositoriesImpl implements InvoiceRepositories {
   }
 
   @override
-  Future<Either<Failure, int>> getIncome() async {
+  Future<Either<Failure, int>> getIncome(String month) async {
     try {
       final response = await invoiceRemoteDataSource.getIncome();
       final decoded = jsonDecode(response.body);

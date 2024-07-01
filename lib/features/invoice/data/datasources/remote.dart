@@ -15,9 +15,10 @@ abstract interface class InvoiceRemoteDataSource {
 
 class InvoiceRemoteDataSourceImpl implements InvoiceRemoteDataSource {
   @override
-  Future<Response> createInvoice(Invoice invoice) async =>
-      await post(Uri.parse('$url${endpoint['invoice']}'),
-          headers: headers, body: jsonEncode(invoice));
+  Future<Response> createInvoice(Invoice invoice) async {
+    return await post(Uri.parse('$url${endpoint['invoice']}'),
+        headers: headers, body: jsonEncode(invoice));
+  }
 
   @override
   Future<Response> getInvoiceByUsername(final String username) async =>

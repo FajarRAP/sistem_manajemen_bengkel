@@ -4,6 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../core/common/widgets/home_app_bar.dart';
+import '../../core/common/widgets/home_content.dart';
+import '../../core/common/widgets/home_content_title.dart';
 import '../../core/common/widgets/snackbar_error.dart';
 import '../../core/common/widgets/snackbar_success.dart';
 import '../../core/constants_finals.dart';
@@ -44,167 +47,115 @@ class HomePage extends StatelessWidget {
           height: double.infinity,
           child: Stack(
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.vertical(
-                    bottom: Radius.circular(40),
-                  ),
-                  color: color.primary,
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                width: double.infinity,
-                height: 230,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Selamat Datang,',
-                      style: GoogleFonts.plusJakartaSans(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.w700),
-                    ),
-                    Text(
-                      authCubit.credentials['name'] ?? 'Default',
-                      style: GoogleFonts.plusJakartaSans(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-              ),
+              const HomeAppBar(),
               Positioned(
                 top: 170,
                 left: 0,
                 right: 0,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                          blurRadius: 3,
-                          spreadRadius: 0,
-                          offset: const Offset(0, 1),
-                          color: Colors.black.withOpacity(.1)),
-                      BoxShadow(
-                          blurRadius: 5,
-                          spreadRadius: 0,
-                          offset: const Offset(0, 5),
-                          color: Colors.black.withOpacity(.09)),
-                    ],
-                  ),
-                  margin: const EdgeInsets.symmetric(horizontal: 28),
+                child: HomeContent(
                   height: 210,
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Text(
-                          'Ambil Antrianmu',
-                          style: GoogleFonts.plusJakartaSans(
-                              fontSize: 20, fontWeight: FontWeight.w600),
-                        ),
-                        const Gap(12),
-                        InkWell(
-                          onTap: () => queueCubit.pickQueue(PickQueueParams(
-                              authCubit.getUsername, authCubit.getName)),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: color.primary,
-                            ),
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            width: double.infinity,
-                            height: 50,
-                            child: BlocBuilder<QueueCubit, QueueState>(
-                              buildWhen: (previous, current) =>
-                                  current is PickQueue,
-                              builder: (context, state) {
-                                print(state);
-                                if (state is PickQueueLoading) {
-                                  return const Center(
-                                      child: CircularProgressIndicator(
-                                          color: Colors.white));
-                                }
-                                return Stack(
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        'Ambil',
-                                        style: GoogleFonts.plusJakartaSans(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Icon(Icons.arrow_forward,
-                                          color: color.secondary),
-                                    )
-                                  ],
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      const HomeContentTitle(
+                        title: 'Ambil Antrianmu',
+                      ),
+                      const Gap(12),
+                      InkWell(
+                        onTap: () => queueCubit.pickQueue(PickQueueParams(
+                            authCubit.getUsername, authCubit.getName)),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: color.primary,
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          width: double.infinity,
+                          height: 50,
+                          child: BlocBuilder<QueueCubit, QueueState>(
+                            buildWhen: (previous, current) =>
+                                current is PickQueue,
+                            builder: (context, state) {
+                              if (state is PickQueueLoading) {
+                                return const Center(
+                                  child: CircularProgressIndicator(
+                                      color: Colors.white),
                                 );
-                              },
-                            ),
+                              }
+                              return Stack(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      'Ambil',
+                                      style: GoogleFonts.plusJakartaSans(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Icon(Icons.arrow_forward,
+                                        color: color.secondary),
+                                  )
+                                ],
+                              );
+                            },
                           ),
                         ),
-                        const Gap(40),
-                        Row(
-                          children: [
-                            Text(
-                              'Antrian saat ini :',
-                              style: GoogleFonts.plusJakartaSans(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
+                      const Gap(40),
+                      Row(
+                        children: [
+                          Text(
+                            'Antrian saat ini :',
+                            style: GoogleFonts.plusJakartaSans(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
+                          const Gap(10),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: color.primary,
                             ),
-                            const Gap(10),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: color.primary,
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 14, vertical: 4),
-                              child: Row(
-                                children: [
-                                  const Icon(CupertinoIcons.timer,
-                                      color: Colors.white),
-                                  const Gap(12),
-                                  BlocBuilder<QueueCubit, QueueState>(
-                                    bloc: queueCubit..getQueueNumToday(),
-                                    buildWhen: (previous, current) =>
-                                        current is QueueNumToday,
-                                    builder: (context, state) {
-                                      if (state is QueueNumTodayLoaded) {
-                                        return Text(
-                                          '${state.queueNum}',
-                                          style: GoogleFonts.plusJakartaSans(
-                                              color: color.secondary,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w800),
-                                        );
-                                      }
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 14, vertical: 4),
+                            child: Row(
+                              children: [
+                                const Icon(CupertinoIcons.timer,
+                                    color: Colors.white),
+                                const Gap(12),
+                                BlocBuilder<QueueCubit, QueueState>(
+                                  bloc: queueCubit..getQueueNumToday(),
+                                  buildWhen: (previous, current) =>
+                                      current is QueueNumToday,
+                                  builder: (context, state) {
+                                    if (state is QueueNumTodayLoaded) {
                                       return Text(
-                                        '...',
+                                        '${state.queueNum}',
                                         style: GoogleFonts.plusJakartaSans(
                                             color: color.secondary,
                                             fontSize: 20,
                                             fontWeight: FontWeight.w800),
                                       );
-                                    },
-                                  ),
-                                ],
-                              ),
+                                    }
+                                    return Text(
+                                      '...',
+                                      style: GoogleFonts.plusJakartaSans(
+                                          color: color.secondary,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w800),
+                                    );
+                                  },
+                                ),
+                              ],
                             ),
-                          ],
-                        )
-                      ],
-                    ),
+                          ),
+                        ],
+                      )
+                    ],
                   ),
                 ),
               ),

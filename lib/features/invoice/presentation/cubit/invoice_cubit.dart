@@ -78,10 +78,10 @@ class InvoiceCubit extends Cubit<InvoiceState> {
     );
   }
 
-  Future<void> getIncome() async {
+  Future<void> getIncome(String month) async {
     emit(GetTransactionLoading());
 
-    final result = await getIncomeUseCase();
+    final result = await getIncomeUseCase(month);
 
     result.fold(
       (failure) => emit(GetTransactionError(failure.message)),

@@ -1,3 +1,6 @@
+import 'package:bengkel_pak_bowo/features/queue/presentation/cubit/queue_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../core/constants_finals.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -16,12 +19,20 @@ class ItemQueue extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
+    final queueCubit = context.read<QueueCubit>();
 
     return InkWell(
       borderRadius: BorderRadius.circular(10),
-      onTap: () => !queue.isAccepted
-          ? Navigator.pushNamed(context, makeInvoicePage)
-          : null,
+      onTap: () {
+        if (!queue.isAccepted) {
+          Navigator.pushNamed(context, makeInvoicePage);
+          queueCubit.queue = queue;
+        }
+      },
+      onDoubleTap: () {
+        print(queue.username);
+        print(queueCubit.queue?.username ?? 'BOKEP');
+      },
       child: Container(
         decoration: BoxDecoration(
             color: const Color(0xFFE0E0E0).withOpacity(.4),
