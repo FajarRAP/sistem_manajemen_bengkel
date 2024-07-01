@@ -4,7 +4,8 @@ class Service {
   final String name;
   final int price;
 
-  String get formattedTotalHarga => NumberFormat('###,###').format(price);
+  String get formattedTotalHarga =>
+      NumberFormat.decimalPattern('id').format(price);
 
   Service({
     required this.name,
