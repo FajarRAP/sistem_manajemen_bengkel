@@ -73,7 +73,7 @@ class InvoiceRepositoriesImpl implements InvoiceRepositories {
       String username, String month) async {
     try {
       final response =
-          await invoiceRemoteDataSource.getExpense(username, month);
+          await invoiceRemoteDataSource.getExpenseAtMonth(username, month);
       final decoded = jsonDecode(response.body);
       
 
@@ -87,9 +87,9 @@ class InvoiceRepositoriesImpl implements InvoiceRepositories {
   }
 
   @override
-  Future<Either<Failure, int>> getIncome(String month) async {
+  Future<Either<Failure, int>> getIncomeAtMonth(String month) async {
     try {
-      final response = await invoiceRemoteDataSource.getIncome();
+      final response = await invoiceRemoteDataSource.getIncomeAtMonth(month);
       final decoded = jsonDecode(response.body);
 
       if (response.statusCode == 200) {

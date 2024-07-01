@@ -34,7 +34,7 @@ class _IncomeMonthSelectorState extends State<IncomeMonthSelector> {
         ),
         const Gap(32),
         BlocBuilder<InvoiceCubit, InvoiceState>(
-          bloc: invoiceCubit..getIncome('${month - 1}'),
+          bloc: invoiceCubit..getIncomeAtMonth('${month - 1}'),
           buildWhen: (previous, current) => current is GetTransaction,
           builder: (context, state) {
             if (state is GetTransactionLoading) {

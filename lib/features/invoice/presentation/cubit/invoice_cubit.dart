@@ -3,8 +3,8 @@ import 'package:meta/meta.dart';
 
 import '../../domain/entities/invoice_entity.dart';
 import '../../domain/usecases/create_invoice_use_case.dart';
-import '../../domain/usecases/get_expense_use_case.dart';
-import '../../domain/usecases/get_income_use_case.dart';
+import '../../domain/usecases/get_expense_at_month_use_case.dart';
+import '../../domain/usecases/get_income_at_month_use_case.dart';
 import '../../domain/usecases/get_invoices_by_username_use_case.dart';
 import '../../domain/usecases/get_invoices_use_case.dart';
 
@@ -23,7 +23,7 @@ class InvoiceCubit extends Cubit<InvoiceState> {
   final GetInvoicesUseCase getInvoicesUseCase;
   final GetInvoicesByUsernameUseCase getInvoicesByUsernameUseCase;
   final GetExpenseAtMonthUseCase getExpenseAtMonthUseCase;
-  final GetIncomeUseCase getIncomeUseCase;
+  final GetIncomeAtMonthUseCase getIncomeUseCase;
 
   Invoice? invoice;
 
@@ -78,7 +78,7 @@ class InvoiceCubit extends Cubit<InvoiceState> {
     );
   }
 
-  Future<void> getIncome(String month) async {
+  Future<void> getIncomeAtMonth(String month) async {
     emit(GetTransactionLoading());
 
     final result = await getIncomeUseCase(month);
@@ -86,7 +86,7 @@ class InvoiceCubit extends Cubit<InvoiceState> {
     result.fold(
       (failure) => emit(GetTransactionError(failure.message)),
       (success) => success == 0
-          ? emit(GetInvoiceEmpty())
+          ? emit(GetTransactionEmpty())
           : emit(GetTransactionLoaded(success)),
     );
   }

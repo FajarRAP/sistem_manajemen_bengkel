@@ -11,8 +11,8 @@ import 'features/invoice/data/datasources/remote.dart';
 import 'features/invoice/data/repositories/invoice_repositories_impl.dart';
 import 'features/invoice/domain/repositories/invoice_repositories.dart';
 import 'features/invoice/domain/usecases/create_invoice_use_case.dart';
-import 'features/invoice/domain/usecases/get_expense_use_case.dart';
-import 'features/invoice/domain/usecases/get_income_use_case.dart';
+import 'features/invoice/domain/usecases/get_expense_at_month_use_case.dart';
+import 'features/invoice/domain/usecases/get_income_at_month_use_case.dart';
 import 'features/invoice/domain/usecases/get_invoices_by_username_use_case.dart';
 import 'features/invoice/domain/usecases/get_invoices_use_case.dart';
 import 'features/invoice/presentation/cubit/invoice_cubit.dart';
@@ -39,7 +39,7 @@ Future<void> dependencyInjection() async {
   locator.registerLazySingleton(() => GetInvoicesUseCase(locator()));
   locator.registerLazySingleton(() => GetInvoicesByUsernameUseCase(locator()));
   locator.registerLazySingleton(() => GetExpenseAtMonthUseCase(locator()));
-  locator.registerLazySingleton(() => GetIncomeUseCase(locator()));
+  locator.registerLazySingleton(() => GetIncomeAtMonthUseCase(locator()));
 
   // Auth
   locator.registerLazySingleton<AuthRemoteDataSource>(

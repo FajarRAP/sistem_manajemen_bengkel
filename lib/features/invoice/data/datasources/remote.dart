@@ -9,8 +9,8 @@ abstract interface class InvoiceRemoteDataSource {
   Future<Response> createInvoice(final Invoice invoice);
   Future<Response> getInvoices();
   Future<Response> getInvoiceByUsername(final String username);
-  Future<Response> getIncome();
-  Future<Response> getExpense(String username, String month);
+  Future<Response> getIncomeAtMonth(String month);
+  Future<Response> getExpenseAtMonth(String username, String month);
 }
 
 class InvoiceRemoteDataSourceImpl implements InvoiceRemoteDataSource {
@@ -30,11 +30,12 @@ class InvoiceRemoteDataSourceImpl implements InvoiceRemoteDataSource {
       await get(Uri.parse('$url${endpoint['invoice']}'), headers: headers);
 
   @override
-  Future<Response> getExpense(String username, String month) async =>
-      await get(Uri.parse('$url${endpoint['expense']}/$username/month/$month'),
+  Future<Response> getIncomeAtMonth(String month) async =>
+      await get(Uri.parse('$url${endpoint['income']}/$month'),
           headers: headers);
 
   @override
-  Future<Response> getIncome() async =>
-      await get(Uri.parse('$url${endpoint['income']}'), headers: headers);
+  Future<Response> getExpenseAtMonth(String username, String month) async =>
+      await get(Uri.parse('$url${endpoint['expense']}/$username/month/$month'),
+          headers: headers);
 }

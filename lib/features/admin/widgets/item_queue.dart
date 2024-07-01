@@ -1,4 +1,4 @@
-import 'package:bengkel_pak_bowo/features/queue/presentation/cubit/queue_cubit.dart';
+import '../../queue/presentation/cubit/queue_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/constants_finals.dart';

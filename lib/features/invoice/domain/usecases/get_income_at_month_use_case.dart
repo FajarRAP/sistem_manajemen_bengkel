@@ -4,12 +4,12 @@ import '../../../../core/failure.dart';
 import '../../../../core/usecase/usecase_params.dart';
 import '../repositories/invoice_repositories.dart';
 
-class GetIncomeUseCase implements UseCaseParams<int, String> {
+class GetIncomeAtMonthUseCase implements UseCaseParams<int, String> {
   final InvoiceRepositories invoiceRepositories;
 
-  GetIncomeUseCase(this.invoiceRepositories);
+  GetIncomeAtMonthUseCase(this.invoiceRepositories);
 
   @override
   Future<Either<Failure, int>> call(String month) async =>
-      await invoiceRepositories.getIncome(month);
+      await invoiceRepositories.getIncomeAtMonth(month);
 }
