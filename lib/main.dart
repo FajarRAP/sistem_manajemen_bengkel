@@ -1,3 +1,5 @@
+import 'package:bengkel_pak_bowo/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,6 +13,9 @@ import 'injection_container.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,  
+  );
   await dependencyInjection();
   final prefs = locator<SharedPreferences>();
   final token = prefs.getString('token');

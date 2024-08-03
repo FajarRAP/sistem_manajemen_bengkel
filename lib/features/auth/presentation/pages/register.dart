@@ -75,7 +75,6 @@ class _RegisterPageState extends State<RegisterPage> {
                   ],
                 ),
               ),
-              forgotPassword: const SizedBox(),
               textButton: Text(
                 'Daftar',
                 style: GoogleFonts.plusJakartaSans(

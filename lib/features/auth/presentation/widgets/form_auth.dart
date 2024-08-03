@@ -11,7 +11,6 @@ class FormAuth extends StatelessWidget {
     required this.title,
     required this.textButton,
     required this.footer,
-    required this.forgotPassword,
     required this.goingTo,
     required this.onPressed,
   });
@@ -20,7 +19,7 @@ class FormAuth extends StatelessWidget {
   final Text title;
   final Text textButton;
   final List<TextSpan> footer;
-  final Widget forgotPassword;
+
   final void Function() goingTo;
   final void Function() onPressed;
 
@@ -53,9 +52,6 @@ class FormAuth extends StatelessWidget {
           const Gap(12),
           // Form Validasi
           form,
-          const Gap(12),
-          // Lupa Password
-          forgotPassword,
           const Gap(36),
           // Button Masuk
           SizedBox(

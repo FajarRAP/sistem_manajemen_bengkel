@@ -72,28 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ),
-              forgotPassword: RichText(
-                text: TextSpan(
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: 'Lupa Password? ',
-                      style: GoogleFonts.plusJakartaSans(
-                        color: Colors.black,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    TextSpan(
-                      text: 'Klik Di Sini',
-                      style: GoogleFonts.plusJakartaSans(
-                        color: color.primary,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              
               textButton: Text(
                 'Masuk',
                 style: GoogleFonts.plusJakartaSans(
